@@ -1,0 +1,34 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+
+.animal-card {
+  border: 1px solid #e043b9;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -0.5rem;
+  justify-content: center;
+}
+
+.tag {
+  background-color: #be54ff;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+}
+
+.profilePic {
+  width: 25vw;
+  height: 40vh;
+}
