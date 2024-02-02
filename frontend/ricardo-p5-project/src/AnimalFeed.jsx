@@ -2,17 +2,34 @@ import { useEffect, useState } from "react";
 import AnimalCard from "./AnimalCard";
 
 function AnimalFeed({ profileId }) {
-
-
     const [animals, setAnimals] = useState([])
     const [pageCount, setPageCount] = useState(1)
+    const [fetchError, setFetchError] = useState(false)
 
+    function fetchAnimals(retries = 5) {
+        fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
+        .then(response => {
+            if (!response.ok) { throw response }
+            return response.json()
+        })
+        .then(data => {
+            setAnimals(data.animals)
+            setFetchError(false)  // Reset the fetch error state
+        })
+        .catch((error) => {
+            if (retries > 0) {
+                // Retry after 1 second
+                setTimeout(() => fetchAnimals(retries - 1), 1000);
+            } else {
+                console.error('Error:', error);
+                setFetchError(true)  // Set the fetch error state
+            }
+        });
+    }
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
-        .then(response => response.json())
-        .then(data => setAnimals(data.animals));
-    }, [pageCount]);
+        fetchAnimals();
+    }, [pageCount, fetchError]);  // Add fetchError as a dependency
     
     function handleAdoptionConsideration(animal) {
         fetch('http://127.0.0.1:5555/save_animal', {
