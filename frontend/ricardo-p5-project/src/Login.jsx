@@ -9,9 +9,12 @@ function Login({ handleLogin }) {
     const handleSubmit = (event) => {
         event.preventDefault();
         handleLogin(username, password);
-        console.log(username)
-        console.log(password)
     };
+
+    // const afterUserCreated = () => {
+    //     handleLogin(newUsername, newPassword)
+    // }
+
 
     if (creatingProfile) {
         return <CreateProfile handleLogin={handleLogin}/>;

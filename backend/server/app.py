@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask import make_response
-from models import db, Profile, Saved_Animal
+from models import db, Profile, Saved_Animal, Foster_listing
 from datetime import datetime
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
@@ -77,60 +77,117 @@ def get_profile_by_id(id):
     return profile_dict, 202
 
 @app.get('/animals')
-def get_saved_animals():
+def get_all_animals():
     animals = Saved_Animal.query.all()
-    return [a.to_dict() for a in animals]
+    return jsonify([animal.to_dict() for animal in animals])
+
+@app.get('/profile/animals')
+def get_profile_animals():
+    profile_id = request.args.get('profileId')
+    if profile_id is not None:
+        animals = Saved_Animal.query.filter_by(profile_id=profile_id).all()
+        return jsonify([animal.to_dict() for animal in animals])
+    else:
+        return jsonify([])
+    
+@app.get('/foster_listings')
+def get_foster_listings():
+    foster_listings = Foster_listing.query.all()
+    return jsonify([foster.to_dict() for foster in foster_listings])
 
 @app.post('/save_animal')
 def save_animal():
-    data = request.get_json()
+    try:
+        data = request.get_json()
+        print(data)
 
-    # Check if img_url already exists in the database
-    existing_animal = Saved_Animal.query.filter_by(img_url=data['url']).first()
+        existing_animal = Saved_Animal.query.filter_by(petfinder_id=data.get('petfinder_id')).first()
 
-    if existing_animal:
-        # If the img_url already exists, return an error message
-        return {'error': 'Animal with this image URL already exists'}, 400
+        if existing_animal:
+            return {'error': 'This animal already exists within your saves'}, 400
+        print('Getting ready for new saved animal')
+        new_saved_animal = Saved_Animal(
+            petfinder_id = data.get('petfinder_id'),
+            name = data.get('name'),
+            species = data.get('species'),
+            breed = data.get('breed'),
+            color = data.get('color'),
+            age = data.get('age'),
+            pic = data.get('pic'),
+            profile_url = data.get('profile_url'),
+            profile_id = data.get('profile_id')
+        )
+        print(new_saved_animal)
+        print('Hello i saved?')
+        db.session.add(new_saved_animal)
+        db.session.commit()
 
-    new_saved_animal = Saved_Animal(
-        name=data['name'],
-        species=data['species'],
-        breed = data['breeds']['mixed'] or data['breeds']['primary'] or data['breeds']['secondary'],
-        color = data['colors']['primary'] or data['colors']['secondary'],
-        age=data['age'],
-        img_url=data['url'],
-        profile_id=1
-    )
-
-    db.session.add(new_saved_animal)
-    db.session.commit()
-
-    return {'message': 'Animal saved successfully'}, 201
+        return {'message': 'Animal saved successfully'}, 201
+    except Exception as e:
+        print(e)
+        return {'error': 'Error saving animal'}, 400
 
 @app.post('/profiles')
 def save_profile():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    # Check if username already exists in the database
-    existing_profile = Profile.query.filter_by(username=data['username']).first()
+        # Check if username already exists in the database
+        existing_profile = Profile.query.filter_by(username=data['username']).first()
 
-    if existing_profile:
-        # If the username already exists, return an error message
-        return {'error': 'Profile with this username already exists'}, 400
+        if existing_profile:
+            # If the username already exists, return an error message
+            return {'error': 'Profile with this username already exists'}, 400
 
-    new_profile = Profile(
-        name=data['name'],
-        username=data['username'],
-        password=bcrypt.generate_password_hash(data['password']),
-        birthday=datetime.strptime(data['birthday'], '%Y-%m-%d').date(),
-        profile_picture=data['profile_picture'],
-        description=data['description']
-    )
+        new_profile = Profile(
+            name=data['name'],
+            username=data['username'],
+            password=bcrypt.generate_password_hash(data['password']),
+            birthday=datetime.strptime(data['birthday'], '%Y-%m-%d').date(),
+            profile_picture=data['profile_picture'],
+            description=data['description']
+        )
 
-    db.session.add(new_profile)
-    db.session.commit()
+        db.session.add(new_profile)
+        db.session.commit()
 
-    return {'message': 'Profile saved successfully'}, 201
+        return {'message': 'Profile saved successfully'}, 201
+    except Exception as e:
+        print(e)
+        return {'error': 'Error saving profile'}, 400
+
+@app.post('/foster_listings')
+def post_foster_listing():
+    try:
+        data = request.get_json()
+        print(data)
+        new_foster_listing = Foster_listing(
+            name = data.get('name'),
+            email_address = data.get('email_address'),
+            city = data.get('city'),
+            state = data.get('state'),
+            preference = data.get('preference'),
+            profile_id = data.get('profile_id')
+        )
+        db.session.add(new_foster_listing)
+        db.session.commit()
+        return {'message': 'Foster listing saved successfully'}, 201
+    except Exception as e:
+        print(e)
+        return {'error': 'Error saving foster listing'}, 400
+
+@app.delete('/animals/<int:id>')
+def delete_saved_animal(id):
+    try:
+        animal = Saved_Animal.query.get(id)
+        if not animal:
+            return {'error': 'Animal not found'}, 404
+        db.session.delete(animal)
+        db.session.commit()
+        return {'message': 'Animal deleted successfully'}, 200
+    except Exception as e:
+        print(e)
+        return {'error': 'Error deleting animal'}, 400
 
 @app.post('/login')
 def post_login():
@@ -145,6 +202,10 @@ def post_login():
 
     # Include the user's id in the response
     return jsonify({'message': 'Login successful', 'id': user.id}), 200
+
+@app.post('/logout')
+def post_logout():
+    return jsonify({'message': 'Logout successful'}), 200
 
 
 if __name__ == '__main__':
