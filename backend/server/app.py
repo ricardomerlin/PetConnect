@@ -55,12 +55,14 @@ def get_animals():
     })
     access_token = token_response.json().get('access_token')
 
-    # Use the access token to fetch the animals
-    animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=30&species={species}', headers={
+    if species:
+        animals_response = requests.get(f'https://api.petfinder.com/v2/animals?type={species}&limit=30', headers={
+                    'Authorization': f'Bearer {access_token}',
+        })
+        return jsonify(animals_response.json()), animals_response.status_code
+    animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=30', headers={
         'Authorization': f'Bearer {access_token}',
     })
-
-    # Return the animal data
     return jsonify(animals_response.json()), animals_response.status_code
 
 @app.get('/profiles')

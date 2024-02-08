@@ -1,5 +1,13 @@
+@keyframes colorChange {
+  0% { background-color:#ffb0b7; } 
+  33% { background-color: #ebc3ff; }
+  66% { background-color: #ffdac1; }
+  100% { background-color: #ffb0b7; }
+}
+
 body {
-  background-color: rgb(255, 204, 179);
+  animation: colorChange 15s infinite;
+  background-color: #ff9aa2;
 }
 
 #root {
@@ -13,10 +21,21 @@ body {
   width: 100%;
 }
 
+.link {
+  background-color: #e043b9;
+  padding: 0.5rem;
+  border-radius: 10px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
 
+.link:hover {
+  background-color: #ff6f61;
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
 
 .animal-card {
-  width: 30%;
+  width: 100%;
   box-sizing: border-box;
   overflow-wrap: break-word;
   border: 1px solid #e043b9;
@@ -24,7 +43,26 @@ body {
   padding: 0.5rem;
   margin-bottom: 1rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
   background-color: white;
+}
+
+.animal-card:hover {
+  transform: scale(1.01);  
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+.left-card {
+  width: 50%
+}
+
+.right-card {
+  width: 50%;
+}
+
+span {
+  display: flex;
+  justify-content: space-between;
 }
 
 .animal-card-text {
@@ -68,7 +106,26 @@ body {
 
 .filters {
   display: flex;
+  font-size: 1vw;
   flex-direction: column;
   align-content: center;
-  width: 15%
+  height: 50vh;
+  width: 15%;
+  border-radius: 20px;
+  background-color: white;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.modal-animal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-Adopt-Button {
+  background-color: white;
+  border-color: black;
+
 }

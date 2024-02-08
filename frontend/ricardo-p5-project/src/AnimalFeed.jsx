@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AnimalCard from "./AnimalCard";
+import BreedFilter from "./BreedFilter";
 import './App.css'
 
 function AnimalFeed({ profile }) {
@@ -34,6 +35,8 @@ function AnimalFeed({ profile }) {
     // const [after, setAfter] = React.useState('');
     // const [sort, setSort] = React.useState('');
 
+    console.log(animals)
+
     function fetchAnimals(retries = 5) {
         fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
         .then(response => {
@@ -53,37 +56,42 @@ function AnimalFeed({ profile }) {
             }
         });
     }
-    console.log(filterSubmit)
+    console.log(species)
 
 
     useEffect(() => {
+        console.log(filterSubmit)
         if (!filterSubmit) {
             return;
         }
-    
         console.log('about to fetch')
-        fetch(`https://api.petfinder.com/v2/types/${species}`)
-        .then(response => {
-            if (!response.ok) { throw response }
-            return response.json()
-        })
-        .then(data => {
-            setAnimals(data.type)
-            setFetchError(false)
-            console.log(data.type)
-        })
-        .then(() => (
-            setFilterSubmit(false)
-        ))
-        .catch((error) => {
-            if (retries > 0) {
-                setTimeout(() => fetchAnimals(retries - 1), 1000);
-            } else {
-                console.error('Error:', error);
-                setFetchError(true)
-            }
-        });
-    }, [filterSubmit, species])
+        function fetchFilteredAnimals(retries = 5) {
+            console.log('trying to fetch animals')
+            fetch(`http://127.0.0.1:5555/api/animals?species=${species}&page=${filterPageCount}`)
+            .then(response => {
+                if (!response.ok) { 
+                    console.log('response was ok')
+                    throw response 
+                }
+                return response.json()
+            })
+            .then(data => {
+                setAnimals(data.animals)
+                setFetchError(false)
+                console.log(data.type)
+            })
+            .catch((error) => {
+                if (retries > 0) {
+                    setTimeout(() => fetchFilteredAnimals(retries - 1), 1000);
+                } else {
+                    console.error('Error:', error);
+                    setFetchError(true)
+                }
+            });
+        }
+        fetchFilteredAnimals()
+    }, [filterSubmit, filterPageCount])
+    console.log(filterSubmit)
 
     useEffect(() => {
         fetchAnimals();
@@ -128,12 +136,12 @@ console.log(profile.id)
         });
     };
     
-    console.log(species)
-
     const handleFilterSubmit = (e) => {
         e.preventDefault()
         setFilterSubmit(true)
     }
+
+    console.log(filterSubmit)
 
     return (
         <>
@@ -143,19 +151,20 @@ console.log(profile.id)
                     <div className="filters">
                         <form onSubmit={handleFilterSubmit}>
                             <h3>Filters:</h3>
-                            <select onChange={(e) => setSpecies(e.target.value)}>
+                            <select onChange={(e) => {
+                                setSpecies(e.target.value);
+                                setFilterSubmit(false);
+                                }}>
                                 <option value="">Select a species</option>
                                 <option value="dog">Dog</option>
                                 <option value="cat">Cat</option>
                             </select>
-                            <label>
-                                <input type="checkbox" />
-                                Filter by Age
-                            </label>
-                            <label>
-                                <input type="checkbox" />
-                                Filter by Size
-                            </label>
+                            {(species === 'dog')
+                            ?
+                            <BreedFilter animals={filterSubmit ? animals : undefined}/>
+                            :
+                            null
+                            }
                             <button>Search</button>
                         </form>
                     </div>
@@ -164,8 +173,20 @@ console.log(profile.id)
                         onAdoptionConsideration={handleAdoptionConsideration} 
                         profile={profile}/>
                 </div>
-                <button onClick={() => setPageCount(pageCount === 1 ? page == 1 : pageCount - 1)}>Previous Page</button>
-                <button onClick={() => setPageCount(pageCount + 1)}>Next Page</button>
+                <button onClick={() => {
+                    if (filterSubmit === true) {
+                        setFilterPageCount(filterPageCount === 1 ? 1 : filterPageCount - 1);
+                    } else {
+                        setPageCount(pageCount === 1 ? 1 : pageCount - 1);
+                    }
+                }}>Previous Page</button>
+                <button onClick={() => {
+                    if (filterSubmit === true) {
+                        setFilterPageCount(filterPageCount + 1);
+                    } else {
+                        setPageCount(pageCount + 1);
+                    }
+                }}>Next Page</button>
             </div>
         </>
     )

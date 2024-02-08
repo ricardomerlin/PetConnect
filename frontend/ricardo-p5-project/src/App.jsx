@@ -58,7 +58,6 @@ function App() {
       setProfile(null);
     };
 
-    console.log(loggedIn)
     console.log(profileId)
     console.log(profile)
 
@@ -94,9 +93,9 @@ function App() {
       <div className="App">
         <nav style={{position: 'fixed', top: 0, width: '100%'}}>
           <div style={{display: 'flex', justifyContent: 'centered', width: '100%'}}>
-            <Link style={{margin: '1vw', opacity: isTop ? 1 : 0.5}} to="/"><strong>Adoptable Pets</strong></Link>
-            <Link style={{margin: '1vw', opacity: isTop ? 1 : 0.5}} to="/profile">Profile</Link>
-            <Link style={{margin: '1vw', opacity: isTop ? 1 : 0.5}} to="/foster">Foster</Link>
+            <Link className='link' style={{margin: '1vw', opacity: isTop ? 1 : 0.5}} to="/">Adoptable Pets</Link>
+            <Link className='link' style={{margin: '1vw', opacity: isTop ? 1 : 0.5}} to="/profile">Profile</Link>
+            <Link className='link' style={{margin: '1vw', opacity: isTop ? 1 : 0.5}} to="/foster">Foster</Link>
           </div>
         </nav>
             <h4>Welcome, {profile.name}
