@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -44,8 +44,6 @@ def get_token():
 
 @app.get('/api/animals')
 def get_animals():
-    # Get the species from the request query parameters
-    species = request.args.get('species')
 
     # Get the access token
     token_response = requests.post('https://api.petfinder.com/v2/oauth2/token', data={
@@ -55,12 +53,7 @@ def get_animals():
     })
     access_token = token_response.json().get('access_token')
 
-    if species:
-        animals_response = requests.get(f'https://api.petfinder.com/v2/animals?type={species}&limit=30', headers={
-                    'Authorization': f'Bearer {access_token}',
-        })
-        return jsonify(animals_response.json()), animals_response.status_code
-    animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=30', headers={
+    animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=100', headers={
         'Authorization': f'Bearer {access_token}',
     })
     return jsonify(animals_response.json()), animals_response.status_code
@@ -201,12 +194,17 @@ def post_login():
 
     if not user or not bcrypt.check_password_hash(user.password, password):
         return jsonify({'error': 'Invalid username or password'}), 401
+    
+    # Set session ("backend cookie") here when login succeeds
+    # session["username"] = username
 
     # Include the user's id in the response
     return jsonify({'message': 'Login successful', 'id': user.id}), 200
 
 @app.post('/logout')
 def post_logout():
+    # Clear the session when logout succeeds
+    # session.pop("username", None)
     return jsonify({'message': 'Logout successful'}), 200
 
 

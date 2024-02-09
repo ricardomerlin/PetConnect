@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 function FosterList({ profile }) {
 
     const [fosterListings, setFosterListings] = useState([])
-    const [fname, setFname] = useState('')
-    const [lname, setLname] = useState('')
+    // const [fname, setFname] = useState('')
+    // const [lname, setLname] = useState('')
     const [email, setEmail] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
@@ -37,7 +37,7 @@ function FosterList({ profile }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'name': fname + ' ' + lname,
+                'name': profile.name,
                 'email_address': email,
                 'city': city,
                 'state': state,
@@ -60,10 +60,10 @@ function FosterList({ profile }) {
             <h1>Want to Foster an Animal? Add your information here to receive foster requests when help is needed in your area.</h1>
             <div className='foster-form-container'>
             <form onSubmit={handleFosterListings}>
-                <label>First Name</label>
+                {/* <label>First Name</label>
                 <input type='text' onChange={(e) => setFname(e.target.value)}></input>
                 <label>Last Name</label>
-                <input type='text' onChange={(e) => setLname(e.target.value)}></input>
+                <input type='text' onChange={(e) => setLname(e.target.value)}></input> */}
                 <label>Email Address</label>
                 <input type='text' onChange={(e) => setEmail(e.target.value)}></input>
                 <label>City</label>
@@ -87,6 +87,9 @@ function FosterList({ profile }) {
                             <p>{listing.email_address}</p>
                             <p>{listing.city}, {listing.state}</p>
                             <p>{listing.preference}</p>
+                            {listing.profile_id === currentProfileId && (
+                                <button onClick={() => deleteListing(listing.id)}>Delete</button>
+                            )}
                         </div>
                     )
                 })}

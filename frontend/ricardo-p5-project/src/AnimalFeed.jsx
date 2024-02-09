@@ -13,43 +13,24 @@ function AnimalFeed({ profile }) {
 
     const [species, setSpecies] = useState('')
 
-    // const [type, setType] = React.useState('');
-    // const [breed, setBreed] = React.useState('');
-    // const [size, setSize] = React.useState('');
-    // const [gender, setGender] = React.useState('');
-    // const [age, setAge] = React.useState('');
-    // const [color, setColor] = React.useState('');
-    // const [coat, setCoat] = React.useState('');
-    // const [status, setStatus] = React.useState('');
-    // const [name, setName] = React.useState('');
-    // const [organization, setOrganization] = React.useState('');
-    // const [goodWithChildren, setGoodWithChildren] = React.useState('');
-    // const [goodWithDogs, setGoodWithDogs] = React.useState('');
-    // const [goodWithCats, setGoodWithCats] = React.useState('');
-    // const [houseTrained, setHouseTrained] = React.useState('');
-    // const [declawed, setDeclawed] = React.useState('');
-    // const [specialNeeds, setSpecialNeeds] = React.useState('');
-    // const [location, setLocation] = React.useState('');
-    // const [distance, setDistance] = React.useState('');
-    // const [before, setBefore] = React.useState('');
-    // const [after, setAfter] = React.useState('');
-    // const [sort, setSort] = React.useState('');
 
-    console.log(animals)
+    console.log(pageCount)
 
-    function fetchAnimals(retries = 5) {
+    function fetchAnimals(retries = 3) {
+        console.log('trying to fetch animals')
         fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
         .then(response => {
             if (!response.ok) { throw response }
             return response.json()
         })
         .then(data => {
+            console.log(data)
             setAnimals(data.animals)
             setFetchError(false)
         })
         .catch((error) => {
             if (retries > 0) {
-                setTimeout(() => fetchAnimals(retries - 1), 1000);
+                setTimeout(() => fetchAnimals(retries - 1), 2000);
             } else {
                 console.error('Error:', error);
                 setFetchError(true)
@@ -65,7 +46,7 @@ function AnimalFeed({ profile }) {
             return;
         }
         console.log('about to fetch')
-        function fetchFilteredAnimals(retries = 5) {
+        function fetchFilteredAnimals(retries = 3) {
             console.log('trying to fetch animals')
             fetch(`http://127.0.0.1:5555/api/animals?species=${species}&page=${filterPageCount}`)
             .then(response => {
@@ -82,7 +63,7 @@ function AnimalFeed({ profile }) {
             })
             .catch((error) => {
                 if (retries > 0) {
-                    setTimeout(() => fetchFilteredAnimals(retries - 1), 1000);
+                    setTimeout(() => fetchFilteredAnimals(retries - 1), 2000);
                 } else {
                     console.error('Error:', error);
                     setFetchError(true)
@@ -91,7 +72,7 @@ function AnimalFeed({ profile }) {
         }
         fetchFilteredAnimals()
     }, [filterSubmit, filterPageCount])
-    console.log(filterSubmit)
+
 
     useEffect(() => {
         fetchAnimals();
@@ -145,33 +126,48 @@ console.log(profile.id)
 
     return (
         <>
-            <div className="App">
+                <div className="App">
                 <h1>Animal Feed</h1>
+                <h2>Welcome to our loving community of animal enthusiasts! Dive into our latest array of furry friends seeking forever homes. From playful pups to graceful felines, each profile is a tale of hope and companionship waiting to be shared. Click through and discover your next loyal companion today.</h2>
                 <div className="animal-feed-container">
                     <div className="filters">
                         <form onSubmit={handleFilterSubmit}>
                             <h3>Filters:</h3>
-                            <select onChange={(e) => {
+                            <select className='species-select' onChange={(e) => {
                                 setSpecies(e.target.value);
                                 setFilterSubmit(false);
-                                }}>
+                            }}>
                                 <option value="">Select a species</option>
-                                <option value="dog">Dog</option>
+                                <option value="barnyard">Barnyard</option>
+                                <option value="bird">Bird</option>
                                 <option value="cat">Cat</option>
+                                <option value="dog">Dog</option>
+                                <option value="horse">Horse</option>
+                                <option value="rabbit">Rabbit</option>
                             </select>
                             {(species === 'dog')
                             ?
                             <BreedFilter animals={filterSubmit ? animals : undefined}/>
                             :
                             null
-                            }
+                        }
                             <button>Search</button>
                         </form>
                     </div>
+                    {animals.length === 0 
+                    ? 
+                    (
+                    <div className="loading-icon">
+                        <h1>Loading...</h1>
+                    </div>
+                    )
+                    :
                     <AnimalCard 
                         animals={animals} 
                         onAdoptionConsideration={handleAdoptionConsideration} 
-                        profile={profile}/>
+                        profile={profile}
+                    />
+                    }
                 </div>
                 <button onClick={() => {
                     if (filterSubmit === true) {
