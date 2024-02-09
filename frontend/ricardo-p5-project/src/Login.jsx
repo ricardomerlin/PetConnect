@@ -22,38 +22,28 @@ function Login({ handleLogin }) {
 
     return (
         <div className='login-container'>
-            {/* {(animalPics.length > 0)
-            ?
             <div className="image-container">
-                <img src={animalPics[randomInt1]} alt="Animal" />
-                <img src={animalPics[randomInt2]} alt="Animal" />
+                <img src="path_to_your_image1" alt="Animal" className="animal-image" />
+                <img src="path_to_your_image2" alt="Animal" className="animal-image" />
             </div>
-            :
-            null
-            } */}
             <h1>Welcome to PetAdoptHub</h1>
             <p>We're glad to see you here. Please login to continue or create a new account if you don't have one yet.</p>
-            <form onSubmit={handleSubmit}>
-                <label>
+            <form onSubmit={handleSubmit} className="login-form">
+                <label className="login-label">
                     Username:
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="login-input" />
                 </label>
                 <label>
                     Password:
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </label>
-                <button type="submit">Login</button>
+                <button type="submit" className="login-submit">Login</button>
             </form>
-            <button onClick={() => setCreatingProfile(true)}>Create Profile</button>
-            {/* {(animalPics.length > 0)
-            ?
+            <button onClick={() => setCreatingProfile(true)} className="login-create">Create Profile</button>
             <div className="image-container">
-                <img src={animalPics[randomInt3]} alt="Animal" />
-                <img src={animalPics[randomInt4]} alt="Animal" />
+                <img src="path_to_your_image3" alt="Animal" className="animal-image" />
+                <img src="path_to_your_image4" alt="Animal" className="animal-image" />
             </div>
-            :
-            null
-            } */}
         </div>
     );
 }

@@ -42,12 +42,12 @@ function CreateProfile({ handleLogin }) {
     }
 
     return (
-        <div>
+        <div className="create-profile-container">
             <h1>Create Profile</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
+            <form onSubmit={handleSubmit} className="create-profile-form">
+                <label className="create-profile-label">
                     Name:
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="create-profile-input" />
                 </label>
                 <label>
                     Username:
@@ -69,9 +69,9 @@ function CreateProfile({ handleLogin }) {
                     Description:
                     <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
                 </label>
-                <button type="submit">Create Profile</button>
+                <button type="submit" className="create-profile-submit">Create Profile</button>
             </form>
-            <button onClick={() => setLoggingIn(true)}>Back to Login</button>
+            <button onClick={() => setLoggingIn(true)} className="create-profile-back">Back to Login</button>
         </div>
     );
 }

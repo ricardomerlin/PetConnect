@@ -8,34 +8,43 @@ function AnimalFeed({ profile }) {
     const [pageCount, setPageCount] = useState(1)
     const [filterPageCount, setFilterPageCount] = useState(1)
     const [fetchError, setFetchError] = useState(false)
+    const [counter, setCounter] = useState(0)
 
     const [filterSubmit, setFilterSubmit] = useState(false)
 
     const [species, setSpecies] = useState('')
 
+    console.log(counter)
 
     console.log(pageCount)
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCounter(counter => counter === 10 ? 1 : counter + 1);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
     function fetchAnimals(retries = 3) {
         console.log('trying to fetch animals')
-        fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
-        .then(response => {
-            if (!response.ok) { throw response }
-            return response.json()
-        })
-        .then(data => {
-            console.log(data)
-            setAnimals(data.animals)
-            setFetchError(false)
-        })
-        .catch((error) => {
-            if (retries > 0) {
-                setTimeout(() => fetchAnimals(retries - 1), 2000);
-            } else {
-                console.error('Error:', error);
-                setFetchError(true)
-            }
-        });
+        // fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
+        // .then(response => {
+        //     if (!response.ok) { throw response }
+        //     return response.json()
+        // })
+        // .then(data => {
+        //     console.log(data)
+        //     setAnimals(data.animals)
+        //     setFetchError(false)
+        // })
+        // .catch((error) => {
+        //     if (retries > 0) {
+        //         setTimeout(() => fetchAnimals(retries - 1), 2000);
+        //     } else {
+        //         console.error('Error:', error);
+        //         setFetchError(true)
+        //     }
+        // });
     }
     console.log(species)
 
@@ -158,7 +167,7 @@ console.log(profile.id)
                     ? 
                     (
                     <div className="loading-icon">
-                        <h1>Loading...</h1>
+                        <h1>{(counter%2 === 0) ? 'Loading...' : 'Loading..'}</h1>
                     </div>
                     )
                     :
