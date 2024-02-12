@@ -66,12 +66,15 @@ function CreateProfile({ handleLogin }) {
                     <input type="text" value={profilePicture} onChange={(e) => setProfilePicture(e.target.value)} required />
                 </label>
                 <label>
-                    Description:
+                    Tell us about yourself and your love for animals. What are you looking for in a companion?
                     <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
                 </label>
                 <button type="submit" className="create-profile-submit">Create Profile</button>
             </form>
-            <button onClick={() => setLoggingIn(true)} className="create-profile-back">Back to Login</button>
+            <button onClick={() => {
+                console.log('Loggin in from new profile');
+                setLoggingIn(true);
+            }} className="create-profile-back">Back to Login</button>
         </div>
     );
 }

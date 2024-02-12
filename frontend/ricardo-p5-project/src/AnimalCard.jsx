@@ -1,5 +1,5 @@
 import Modal from 'react-modal'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 Modal.setAppElement('#root')
@@ -26,6 +26,13 @@ function AnimalCard({ animals, onAdoptionConsideration, profile }) {
         setModalIsOpen(!modalIsOpen);
     }
 
+    useEffect(() => {
+        if (modalIsOpen === true) {
+            document.body.classList.add('no-scroll')
+        } else if (modalIsOpen === false) {
+            document.body.classList.remove('no-scroll')
+        }
+    }, [modalIsOpen])
 
     
     console.log(profile.id)
@@ -88,8 +95,8 @@ function AnimalCard({ animals, onAdoptionConsideration, profile }) {
                     appElement={document.getElementById('root')}
                     isOpen={modalIsOpen}
                     onClick={() => {
-                        setModalIsOpen(false)
-                        setSelectedAnimal(null)
+                        setModalIsOpen(false);
+                        setSelectedAnimal(null);
                     }}
                     contentLabel="Animal Details"
                 >
@@ -121,6 +128,7 @@ function AnimalCard({ animals, onAdoptionConsideration, profile }) {
                         ) : null} 
                             <p>{selectedAnimal.gender}</p>
                             {selectedAnimal.colors.primary ? <p>Color{selectedAnimal.colors.secondary ? 's' : null}: {selectedAnimal.colors.primary}{selectedAnimal.colors.secondary ? ', ' + selectedAnimal.colors.secondary : null}</p> : null}
+                            <p>Size: {selectedAnimal.size}</p>
 
                             
 

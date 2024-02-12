@@ -40,6 +40,7 @@ function App() {
     };
 
     const handleLogout = async () => {
+      console.log('logouut button clicked')
       const response = await fetch('http://127.0.0.1:5555/logout', {
         method: 'POST',
         headers: {
@@ -91,20 +92,33 @@ function App() {
     <Router>
       {loggedIn && profile ?
       <div className="App" style={{ paddingTop:'150px' }}>
-        <nav className='top-bar' style={{opacity: isTop ? 1 : 0.1}}>
-          <div>
-            <div className='links'>
-              <Link className='link' style={{opacity: isTop ? 1 : 0.1, marginLeft: '10px'}} to="/">Adoptable Animals</Link>
-              <Link className='link' style={{opacity: isTop ? 1 : 0.1}} to="/profile">My Profile</Link>
-              <Link className='link' style={{opacity: isTop ? 1 : 0.1}} to="/foster">Foster</Link>
+        {!isTop &&
+          <div className='pop-up-bar'>
+            <div className='side-links' style={{opacity: '1'}}>
+              <Link className='side-link' to="/">Adoptable Animals</Link>
+              <Link className='side-link' to="/profile">My Profile</Link>
+              <Link className='side-link' to="/foster">Foster</Link>
             </div>
           </div>
-          <h1>Leash of Life</h1>
+        }
+        <nav className='top-bar' style={{opacity: isTop ? 1 : 0.1}}>
+          <div>
+            {isTop ?
+            <div className='links'>
+              <Link className='link' style={{opacity: isTop ? 1 : 0, marginLeft: '10px'}} to="/">Adoptable Animals</Link>
+              <Link className='link' style={{opacity: isTop ? 1 : 0}} to="/profile">My Profile</Link>
+              <Link className='link' style={{opacity: isTop ? 1 : 0}} to="/foster">Foster</Link>
+            </div>
+            :
+            null
+            }
+          </div>
+          <h1>PetConnect</h1>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '10px' }}>
             <div className='logout'>
-              <h4>Welcome, {profile.name}
-                <button onClick={handleLogout}>Logout</button>
-              </h4>
+              <p>Welcome, {profile.name}!</p>
+              <img className='small-profile-pic' src={profile.profile_picture}/>
+              {isTop ? <button onClick={handleLogout}>Logout</button> : null}
             </div>
           </div>
         </nav>
@@ -117,6 +131,8 @@ function App() {
       :
       <Routes>
         <Route path='/' element={<Login handleLogin={handleLogin}/>}></Route>
+        <Route path="/profile" element={<Login handleLogin={handleLogin}/>} />
+        <Route path="/foster" element={<Login handleLogin={handleLogin}/>} />
       </Routes>
       }
     </Router>

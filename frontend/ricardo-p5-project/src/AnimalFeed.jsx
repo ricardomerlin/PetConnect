@@ -19,32 +19,34 @@ function AnimalFeed({ profile }) {
     console.log(pageCount)
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setCounter(counter => counter === 10 ? 1 : counter + 1);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+        if (animals.length === 0) {
+            const interval = setInterval(() => {
+                setCounter(counter => counter === 10 ? 1 : counter + 1);
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [animals]);
 
     function fetchAnimals(retries = 3) {
         console.log('trying to fetch animals')
-        // fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
-        // .then(response => {
-        //     if (!response.ok) { throw response }
-        //     return response.json()
-        // })
-        // .then(data => {
-        //     console.log(data)
-        //     setAnimals(data.animals)
-        //     setFetchError(false)
-        // })
-        // .catch((error) => {
-        //     if (retries > 0) {
-        //         setTimeout(() => fetchAnimals(retries - 1), 2000);
-        //     } else {
-        //         console.error('Error:', error);
-        //         setFetchError(true)
-        //     }
-        // });
+        fetch(`http://127.0.0.1:5555/api/animals?page=${pageCount}`)
+        .then(response => {
+            if (!response.ok) { throw response }
+            return response.json()
+        })
+        .then(data => {
+            console.log(data)
+            setAnimals(data.animals)
+            setFetchError(false)
+        })
+        .catch((error) => {
+            if (retries > 0) {
+                setTimeout(() => fetchAnimals(retries - 1), 2000);
+            } else {
+                console.error('Error:', error);
+                setFetchError(true)
+            }
+        });
     }
     console.log(species)
 
@@ -136,7 +138,7 @@ console.log(profile.id)
     return (
         <>
                 <div className="App">
-                <h1>Animal Feed</h1>
+                <h1>Adoptable Animals</h1>
                 <h2>Welcome to our loving community of animal enthusiasts! Dive into our latest array of furry friends seeking forever homes. From playful pups to graceful felines, each profile is a tale of hope and companionship waiting to be shared. Click through and discover your next loyal companion today.</h2>
                 <div className="animal-feed-container">
                     <div className="filters">

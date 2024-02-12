@@ -3,7 +3,6 @@ import './App.css'
 import ProfileAnimalCard from './ProfileAnimalCard';
 
 function Profile({ profile }) {
-    // const [profile, setProfile] = useState(null);
     const [animals, setAnimals] = useState([]);
 
     console.log(profile);
@@ -34,7 +33,7 @@ function Profile({ profile }) {
 
     return (
         <div>
-            <img className='profilePic' src={profile.profile_picture}/>
+            <img className='profile-pic' src={profile.profile_picture}/>
             <h1>{profile.name}</h1>
             <p>{profile.description}</p>
             <h2>Animals:</h2>

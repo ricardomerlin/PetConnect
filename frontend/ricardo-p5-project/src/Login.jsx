@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import CreateProfile from './CreateProfile';
+import DogPics from './DogPics';
+import CatPics from './CatPics';
 
 function Login({ handleLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [creatingProfile, setCreatingProfile] = useState(false);
+    const [dog1, setDog1] = useState('');
+    const [dog2, setDog2] = useState('');
+    const [cat1, setCat1] = useState('');
+    const [cat2, setCat2] = useState('');
+    const [dogArray, setDogArray] = useState([]);
+    const [catArray, setCatArray] = useState([]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -14,19 +22,11 @@ function Login({ handleLogin }) {
     if (creatingProfile) {
         return <CreateProfile handleLogin={handleLogin}/>;
     }
-    
-    // const randomInt1 = Math.floor(Math.random() * animalPics.length);
-    // const randomInt2 = Math.floor(Math.random() * animalPics.length);
-    // const randomInt3 = Math.floor(Math.random() * animalPics.length);
-    // const randomInt4 = Math.floor(Math.random() * animalPics.length);
 
     return (
         <div className='login-container'>
-            <div className="image-container">
-                <img src="path_to_your_image1" alt="Animal" className="animal-image" />
-                <img src="path_to_your_image2" alt="Animal" className="animal-image" />
-            </div>
-            <h1>Welcome to PetAdoptHub</h1>
+            <DogPics />
+            <h1>Welcome to PetConnect</h1>
             <p>We're glad to see you here. Please login to continue or create a new account if you don't have one yet.</p>
             <form onSubmit={handleSubmit} className="login-form">
                 <label className="login-label">
@@ -40,10 +40,7 @@ function Login({ handleLogin }) {
                 <button type="submit" className="login-submit">Login</button>
             </form>
             <button onClick={() => setCreatingProfile(true)} className="login-create">Create Profile</button>
-            <div className="image-container">
-                <img src="path_to_your_image3" alt="Animal" className="animal-image" />
-                <img src="path_to_your_image4" alt="Animal" className="animal-image" />
-            </div>
+            <CatPics />
         </div>
     );
 }

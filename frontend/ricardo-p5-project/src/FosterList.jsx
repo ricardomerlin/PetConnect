@@ -27,30 +27,32 @@ function FosterList({ profile }) {
 
     function handleFosterListings (e) {
         e.preventDefault()
-        for (let i = 0; i < fosterListings.length; i++)
-            if (fosterListings[i].profile_id === profile.id) {
-                return alert('You already have a listing')
-            }
-        fetch('http://127.0.0.1:5555/foster_listings', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'name': profile.name,
-                'email_address': email,
-                'city': city,
-                'state': state,
-                'preference': preference,
-                'profile_id': profile.id
+        if (profile) {
+            for (let i = 0; i < fosterListings.length; i++)
+                if (fosterListings[i].profile_id === profile.id) {
+                    return alert('You already have a listing')
+                }
+            fetch('http://127.0.0.1:5555/foster_listings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name': profile.name,
+                    'email_address': email,
+                    'city': city,
+                    'state': state,
+                    'preference': preference,
+                    'profile_id': profile.id
+                })
             })
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            setFosterListings([...fosterListings, data])
-            getFosterListings()
-        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                setFosterListings([...fosterListings, data])
+                getFosterListings()
+            })
+            }
         }
 
 
@@ -60,10 +62,6 @@ function FosterList({ profile }) {
             <h1>Want to Foster an Animal? Add your information here to receive foster requests when help is needed in your area.</h1>
             <div className='foster-form-container'>
             <form onSubmit={handleFosterListings}>
-                {/* <label>First Name</label>
-                <input type='text' onChange={(e) => setFname(e.target.value)}></input>
-                <label>Last Name</label>
-                <input type='text' onChange={(e) => setLname(e.target.value)}></input> */}
                 <label>Email Address</label>
                 <input type='text' onChange={(e) => setEmail(e.target.value)}></input>
                 <label>City</label>
@@ -87,7 +85,7 @@ function FosterList({ profile }) {
                             <p>{listing.email_address}</p>
                             <p>{listing.city}, {listing.state}</p>
                             <p>{listing.preference}</p>
-                            {listing.profile_id === currentProfileId && (
+                            {listing.profile_id === profile.id && (
                                 <button onClick={() => deleteListing(listing.id)}>Delete</button>
                             )}
                         </div>
