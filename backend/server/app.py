@@ -183,6 +183,21 @@ def delete_saved_animal(id):
     except Exception as e:
         print(e)
         return {'error': 'Error deleting animal'}, 400
+    
+@app.delete('/foster_listings/<int:id>')
+def delete_foster_listing(id):
+    try:
+        foster_listing = Foster_listing.query.get(id)
+        if foster_listing is None:
+            return jsonify({'error': 'Listing not found'}), 404
+
+        db.session.delete(foster_listing)
+        db.session.commit()
+
+        return jsonify({'message': 'Listing deleted successfully'}), 200
+    except Exception as e:
+        print(e)
+
 
 @app.post('/login')
 def post_login():

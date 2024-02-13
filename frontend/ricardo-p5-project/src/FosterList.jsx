@@ -55,6 +55,16 @@ function FosterList({ profile }) {
             }
         }
 
+    function deleteListing(id) {
+        fetch(`http://127.0.0.1:5555/foster_listings/${listing.id}`, {
+            method: 'DELETE',
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            setFosterListings(fosterListings.filter(listing => listing.profile_id !== profile.id))
+        })
+    }
 
 
     return (

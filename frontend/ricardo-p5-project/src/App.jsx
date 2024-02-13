@@ -94,14 +94,15 @@ function App() {
       <div className="App" style={{ paddingTop:'150px' }}>
         {!isTop &&
           <div className='pop-up-bar'>
-            <div className='side-links' style={{opacity: '1'}}>
+            <div className='side-links' style={{opacity: isTop ? 0 : 1}}>
+              <h2>PetConnect</h2>
               <Link className='side-link' to="/">Adoptable Animals</Link>
               <Link className='side-link' to="/profile">My Profile</Link>
               <Link className='side-link' to="/foster">Foster</Link>
             </div>
           </div>
         }
-        <nav className='top-bar' style={{opacity: isTop ? 1 : 0.1}}>
+        <nav className='top-bar' style={{opacity: isTop ? 1 : 0}}>
           <div>
             {isTop ?
             <div className='links'>
