@@ -8,14 +8,7 @@ function Profile({ profile }) {
     console.log(profile);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5555/profiles/${profile.id}`)
-        .then(res => res.json())
-        .then(data => {
-            setProfile(data);
-        })
-        .catch(error => console.error('Error:', error));
-
-        fetch(`http://127.0.0.1:5555/profile/animals?profileId=${profile.id}`)
+        fetch(`api/profile/animals?profileId=${profile.id}`)
         .then(res => res.json())
         .then(data => {
             setAnimals(data);
@@ -33,10 +26,12 @@ function Profile({ profile }) {
 
     return (
         <div>
-            <img className='profile-pic' src={profile.profile_picture}/>
-            <h1>{profile.name}</h1>
-            <p>{profile.description}</p>
-            <h2>Animals:</h2>
+            <div className='profile-card'>
+                <img className='profile-pic' src={profile.profile_picture}/>
+                <h1>{profile.name}</h1>
+                <p>{profile.description}</p>
+            </div>
+            <h2>Saved Animals:</h2>
             <ProfileAnimalCard animals={animals} onDelete={handleDeletedAnimal}/>
         </div>
     );

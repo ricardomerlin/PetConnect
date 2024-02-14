@@ -5,7 +5,7 @@ function ProfileAnimalCard({ animals, onDelete }) {
 
     const handleDeleteAnimal = (animal) => {
         onDelete(animal)
-        fetch(`http://127.0.0.1:5555/animals/${animal.id}`, {
+        fetch(`api/animals/${animal.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ function ProfileAnimalCard({ animals, onDelete }) {
     
     const mappedProfileAnimals = () => (
         animals.map(animal => (
-        <div key={animal.id} className="animal-card">
+        <div key={animal.id} className="profile-animal-card">
             {animal.pic ? 
             <img src={animal.pic} style={{width: '50%', height: '50%', objectFit: 'contain'}}
             /> : null}
@@ -32,7 +32,7 @@ function ProfileAnimalCard({ animals, onDelete }) {
         )))
 
     return (
-        <div className="animal-feed-container">
+        <div className="animal-profile-container">
             {mappedProfileAnimals()}
         </div>
     )

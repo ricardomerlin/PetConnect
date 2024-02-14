@@ -13,7 +13,7 @@ function CreateProfile({ handleLogin }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const response = await fetch('http://127.0.0.1:5555/profiles', {
+        const response = await fetch('/profiles', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

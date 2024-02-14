@@ -13,10 +13,16 @@ function App() {
   const [profile, setProfile] = useState(null)
   const [isTop, setIsTop] = useState(true);
 
-  console.log(profileId)
+    useEffect(() => {
+      fetch(`api/check_session`).then((res) => {
+          if (res.ok) {
+              res.json().then((user) => setProfile(user));
+          }
+      });
+    }, []);
 
     const handleLogin = async (username, password) => {
-      const response = await fetch('http://127.0.0.1:5555/login', {
+      const response = await fetch('/api/login', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -29,6 +35,7 @@ function App() {
 
 
     if (response.ok) {
+        console.log(response)
         const data = await response.json();
         setLoggedIn(true);
         console.log(data.id)
@@ -41,7 +48,7 @@ function App() {
 
     const handleLogout = async () => {
       console.log('logouut button clicked')
-      const response = await fetch('http://127.0.0.1:5555/logout', {
+      const response = await fetch('api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +72,7 @@ function App() {
     useEffect(() => {
       if (profileId) { 
         console.log('I am running')
-        fetch(`http://127.0.0.1:5555/profiles/${profileId}`)
+        fetch(`api/profiles/${profileId}`)
         .then(res => res.json())
         .then(data => {
           setProfile(data);
@@ -87,11 +94,10 @@ function App() {
     }, []);
 
 
-
   return (
     <Router>
-      {loggedIn && profile ?
-      <div className="App" style={{ paddingTop:'150px' }}>
+      {profile ?
+      <div className="App">
         {!isTop &&
           <div className='pop-up-bar'>
             <div className='side-links' style={{opacity: isTop ? 0 : 1}}>

@@ -14,6 +14,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv('CLIENT_SECRET')
 CORS(app, origins=['http://localhost:5173'])
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -27,6 +28,15 @@ def home():
     print(os.getenv('CLIENT_ID'))
     print(os.getenv('CLIENT_SECRET'))
     return 'Hello World!'
+
+@app.get('/api/check_session')
+def check_session():
+    profile = db.session.get(Profile, session.get('user_id'))
+    print(f'check session {session.get("user_id")}')
+    if profile:
+        return profile.to_dict(rules=['-password']), 200
+    else:
+        return {"message": "No user logged in"}, 401
 
 @app.post('/api/token')
 def get_token():
@@ -58,12 +68,12 @@ def get_animals():
     })
     return jsonify(animals_response.json()), animals_response.status_code
 
-@app.get('/profiles')
+@app.get('/api/profiles')
 def get_profiles():
     profiles = Profile.query.all()
     return jsonify([p.to_dict() for p in profiles])
 
-@app.get('/profiles/<int:id>')
+@app.get('/api/profiles/<int:id>')
 def get_profile_by_id(id):
     profile = db.session.get(Profile, id)
     if not profile:
@@ -76,7 +86,7 @@ def get_all_animals():
     animals = Saved_Animal.query.all()
     return jsonify([animal.to_dict() for animal in animals])
 
-@app.get('/profile/animals')
+@app.get('/api/profile/animals')
 def get_profile_animals():
     profile_id = request.args.get('profileId')
     if profile_id is not None:
@@ -90,7 +100,7 @@ def get_foster_listings():
     foster_listings = Foster_listing.query.all()
     return jsonify([foster.to_dict() for foster in foster_listings])
 
-@app.post('/save_animal')
+@app.post('/api/save_animal')
 def save_animal():
     try:
         data = request.get_json()
@@ -122,7 +132,7 @@ def save_animal():
         print(e)
         return {'error': 'Error saving animal'}, 400
 
-@app.post('/profiles')
+@app.post('/api/profiles')
 def save_profile():
     try:
         data = request.get_json()
@@ -151,7 +161,7 @@ def save_profile():
         print(e)
         return {'error': 'Error saving profile'}, 400
 
-@app.post('/foster_listings')
+@app.post('/api/foster_listings')
 def post_foster_listing():
     try:
         data = request.get_json()
@@ -171,7 +181,7 @@ def post_foster_listing():
         print(e)
         return {'error': 'Error saving foster listing'}, 400
 
-@app.delete('/animals/<int:id>')
+@app.delete('/api/animals/<int:id>')
 def delete_saved_animal(id):
     try:
         animal = Saved_Animal.query.get(id)
@@ -184,7 +194,7 @@ def delete_saved_animal(id):
         print(e)
         return {'error': 'Error deleting animal'}, 400
     
-@app.delete('/foster_listings/<int:id>')
+@app.delete('/api/foster_listings/<int:id>')
 def delete_foster_listing(id):
     try:
         foster_listing = Foster_listing.query.get(id)
@@ -199,7 +209,7 @@ def delete_foster_listing(id):
         print(e)
 
 
-@app.post('/login')
+@app.post('/api/login')
 def post_login():
     data = request.get_json()
     username = data.get('username')
@@ -209,17 +219,15 @@ def post_login():
 
     if not user or not bcrypt.check_password_hash(user.password, password):
         return jsonify({'error': 'Invalid username or password'}), 401
-    
-    # Set session ("backend cookie") here when login succeeds
-    # session["username"] = username
 
-    # Include the user's id in the response
+    session['user_id'] = user.id
+    print(user.id)
+    print("login")
     return jsonify({'message': 'Login successful', 'id': user.id}), 200
 
-@app.post('/logout')
+@app.post('/api/logout')
 def post_logout():
-    # Clear the session when logout succeeds
-    # session.pop("username", None)
+    session.pop("user_id", None)
     return jsonify({'message': 'Logout successful'}), 200
 
 
