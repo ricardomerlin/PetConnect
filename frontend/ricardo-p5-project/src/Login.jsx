@@ -20,16 +20,16 @@ function Login({ handleLogin }) {
     return (
         <div className='login-container'>
             <DogPics />
-            <h1>Welcome to PetConnect</h1>
+            <h1 style={{marginTop: '20px', marginBottom:"0px"}}>Welcome to PetConnect</h1>
             <p>We're glad to see you here. Please login to continue or create a new account if you don't have one yet.</p>
             <form onSubmit={handleSubmit} className="login-form">
                 <label className="login-label">
-                    Username:
+                    Username: 
                     <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="login-input" />
                 </label>
                 <label>
-                    Password:
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    Password: 
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="login-input"/>
                 </label>
                 <button type="submit" className="login-submit">Login</button>
             </form>

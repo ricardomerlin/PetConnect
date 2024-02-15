@@ -22,11 +22,13 @@ function ProfileAnimalCard({ animals, onDelete }) {
     const mappedProfileAnimals = () => (
         animals.map(animal => (
         <div key={animal.id} className="profile-animal-card">
+            <h3>{animal.name}</h3>
             {animal.pic ? 
             <img src={animal.pic} style={{width: '50%', height: '50%', objectFit: 'contain'}}
             /> : null}
-            <h3>{animal.name}</h3>
-            <p>{animal.species}</p>
+            <p><strong>{animal.species}</strong></p>  
+            <p>{animal.breed}</p>
+            <a href={animal.profile_url}>See more on {animal.name} here.</a>
             <button onClick={() => handleDeleteAnimal(animal)}>Remove from possible adoption list</button>
         </div>
         )))

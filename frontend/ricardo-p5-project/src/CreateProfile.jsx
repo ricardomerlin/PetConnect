@@ -13,6 +13,21 @@ function CreateProfile({ handleLogin }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+
+        const birthDate = new Date(birthday);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+        }
+
+        if (age < 18) {
+        alert('You must be at least 18 years old.');
+        return;
+        }
+
         const response = await fetch('api/profiles', {
             method: 'POST',
             headers: {
@@ -44,6 +59,12 @@ function CreateProfile({ handleLogin }) {
     return (
         <div className="create-profile-container">
             <h1>Create Profile</h1>
+            <img     style={{
+                            height: '20vh', 
+                            margin: '0', 
+                            borderRadius:`50%`,
+                            border: '2px solid black',
+                        }}  src="https://cdn.pixabay.com/photo/2017/06/19/14/11/golden-retriever-2419453_1280.jpg" alt="Golden Retriever" className="create-profile-image" />
             <form onSubmit={handleSubmit} className="create-profile-form">
                 <label className="create-profile-label">
                     Name:

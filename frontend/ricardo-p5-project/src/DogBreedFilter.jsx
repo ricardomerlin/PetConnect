@@ -4,7 +4,7 @@ function DogBreedFilter({ handleBreedSelection }) {
 
 
     return (
-        <select onChange={(e) => handleBreedSelection(e.target.value)}>
+        <select style={{borderRadius:'40px'}} onChange={(e) => handleBreedSelection(e.target.value)}>
                 <option value="">Select a breed</option>
                 <option value="Affenpinscher">Affenpinscher</option>
                 <option value="Akita">Akita</option>
