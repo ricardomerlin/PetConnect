@@ -487,12 +487,15 @@ span {
   background-color: #f9f9f9;
   border-radius: 10px;
   flex: 1;
+  height: 500px; /* Set a specific height */
+
 }
 
 .foster-listings-container {
   display: flex;
-  flex: 2;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .foster-listing {
@@ -506,7 +509,7 @@ span {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   background-color: #b3e9ff;
   border-radius: 10prgb(251, 167, 255);
-  margin-bottom: 20px;
+  margin: 20px;
 }
 
 .animal-profile-container {

@@ -149,7 +149,7 @@ function App() {
               }
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', padding: '3vw' }}>
-                <p>Welcome Ricardo</p>
+                <p>Welcome {profile.name}</p>
                 {profile.profile_picture ? <img src={profile.profile_picture} alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '50%', padding: '4px' }} /> : null}
                 <button onClick={handleLogout}>Logout</button>
               </div>

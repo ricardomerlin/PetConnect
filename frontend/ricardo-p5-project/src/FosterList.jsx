@@ -9,6 +9,9 @@ function FosterList({ profile }) {
     const [preference, setPreference] = useState('dog')
     const [description, setDescription] = useState('')
 
+    const [filterCity, setFilterCity] = useState('')
+    const [filterState, setFilterState] = useState('')
+
     useEffect(() => {
         getFosterListings()
     }, [])
@@ -21,8 +24,17 @@ function FosterList({ profile }) {
         })
     }
 
+    function handleFilterChange(e, setFilter) {
+        setFilter(e.target.value)
+    }
 
-    console.log(profile.id)
+    function filterLocation (e) {
+        e.preventDefault()
+        const filteredListings = fosterListings.filter(listing => listing.city.toLowerCase().includes(filterCity.toLowerCase()) && listing.state.toLowerCase().includes(filterState.toLowerCase()))
+        setFosterListings(filteredListings)
+    }
+
+
 
     function handleFosterListings (e) {
         e.preventDefault()
@@ -157,24 +169,38 @@ function FosterList({ profile }) {
                     <br/>
                     <br/>
                     <button type='submit'>Submit</button>
-                </form>
-                </div>
-                <div className='foster-listings-container'>
-                    {fosterListings.map(listing => {
-                        return (
-                            <div key={listing.id} className='foster-listing'>
-                                <h2 style={{ color: 'darkblue', textAlign: 'center' }}><u>{listing.name}</u></h2>
-                                <p><strong>Email:</strong> {listing.email_address}</p>
-                                <p><strong>Location:</strong> {listing.city}, {listing.state}</p>
-                                <p><strong>About:</strong> {listing.description}</p>
-                                <p style={{ color: 'darkgreen' }}>Interested in fostering <strong>{listing.preference}s</strong></p>
-                                {listing.profile_id === profile.id && (
-                                    <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => deleteListing(listing.id)}>Delete</button>
-                                )}
-                            </div>
-                        )
-                    })}
-                </div>
+                    </form>
+                    </div>
+                    <div style={{width: '75%', display: 'flex', flexDirection: 'column'}}>
+                        <form>
+                            <label>Filter by City: </label>
+                                <input type='text' onChange={(e) => handleFilterChange(e, setFilterCity)}></input>
+                                <br/>
+                                <br/>
+                            <label>Filter by State: </label>
+                                <input type='text' onChange={(e) => handleFilterChange(e, setFilterState)}></input>
+                                <br/>
+                                <br/>
+                            <button onClick={filterLocation}>Filter</button>
+                            <button onClick={getFosterListings}>Reset</button>
+                        </form>
+                        <div className='foster-listings-container'>
+                            {fosterListings.map(listing => {
+                                return (
+                                    <div key={listing.id} className='foster-listing'>
+                                        <h2 style={{ color: 'darkblue', textAlign: 'center' }}><u>{listing.name}</u></h2>
+                                        <p><strong>Email:</strong> {listing.email_address}</p>
+                                        <p><strong>Location:</strong> {listing.city}, {listing.state}</p>
+                                        <p><strong>About:</strong> {listing.description}</p>
+                                        <p style={{ color: 'darkgreen' }}>Interested in fostering <strong>{listing.preference}s</strong></p>
+                                        {listing.profile_id === profile.id && (
+                                            <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => deleteListing(listing.id)}>Delete</button>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
             </div>
         </div>
 
