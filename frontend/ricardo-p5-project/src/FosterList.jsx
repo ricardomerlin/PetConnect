@@ -3,19 +3,18 @@ import { useState, useEffect } from 'react'
 function FosterList({ profile }) {
 
     const [fosterListings, setFosterListings] = useState([])
-    // const [fname, setFname] = useState('')
-    // const [lname, setLname] = useState('')
     const [email, setEmail] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
     const [preference, setPreference] = useState('dog')
+    const [description, setDescription] = useState('')
 
     useEffect(() => {
         getFosterListings()
     }, [])
 
     function getFosterListings() {
-        fetch('/foster_listings')
+        fetch('/api/foster_listings')
         .then(res => res.json())
         .then(data => {
             setFosterListings(data)
@@ -32,7 +31,7 @@ function FosterList({ profile }) {
                 if (fosterListings[i].profile_id === profile.id) {
                     return alert('You already have a listing')
                 }
-            fetch('/foster_listings', {
+            fetch('/api/foster_listings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -43,7 +42,8 @@ function FosterList({ profile }) {
                     'city': city,
                     'state': state,
                     'preference': preference,
-                    'profile_id': profile.id
+                    'profile_id': profile.id,
+                    'description': description
                 })
             })
             .then(res => res.json())
@@ -56,7 +56,7 @@ function FosterList({ profile }) {
         }
 
     function deleteListing(id) {
-        fetch(`/foster_listings/${id}`, {
+        fetch(`/api/foster_listings/${id}`, {
             method: 'DELETE',
         })
         .then(res => res.json())
@@ -65,6 +65,8 @@ function FosterList({ profile }) {
             setFosterListings(fosterListings.filter(listing => listing.profile_id !== profile.id))
         })
     }
+
+    console.log(description)
 
     return (
         <div className='foster-component-container'>
@@ -144,6 +146,16 @@ function FosterList({ profile }) {
                     </select>
                     <br/>
                     <br/>
+                    <label>Tell us about yourself. Why foster? Do you currently have any pets, or have you had pets before? </label>
+                    <br />
+                    <textarea 
+                        rows="4" 
+                        cols="50" 
+                        wrap="soft" 
+                        onChange={(e) => setDescription(e.target.value)}
+                    ></textarea>
+                    <br/>
+                    <br/>
                     <button type='submit'>Submit</button>
                 </form>
                 </div>
@@ -151,12 +163,13 @@ function FosterList({ profile }) {
                     {fosterListings.map(listing => {
                         return (
                             <div key={listing.id} className='foster-listing'>
-                                <h2>{listing.name}</h2>
-                                <p>{listing.email_address}</p>
-                                <p>{listing.city}, {listing.state}</p>
-                                <p>Interesting in fostering {listing.preference}s</p>
+                                <h2 style={{ color: 'darkblue', textAlign: 'center' }}><u>{listing.name}</u></h2>
+                                <p><strong>Email:</strong> {listing.email_address}</p>
+                                <p><strong>Location:</strong> {listing.city}, {listing.state}</p>
+                                <p><strong>About:</strong> {listing.description}</p>
+                                <p style={{ color: 'darkgreen' }}>Interested in fostering <strong>{listing.preference}s</strong></p>
                                 {listing.profile_id === profile.id && (
-                                    <button onClick={() => deleteListing(listing.id)}>Delete</button>
+                                    <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => deleteListing(listing.id)}>Delete</button>
                                 )}
                             </div>
                         )

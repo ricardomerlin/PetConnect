@@ -1,31 +1,30 @@
 import { useEffect, useState } from "react";
 import AnimalCard from "./AnimalCard";
-import BreedFilter from "./BreedFilter";
+import DogBreedFilter from "./DogBreedFilter";
+import CatBreedFilter from "./CatBreedFilter";
 import Modal from 'react-modal';
 import './App.css'
 
 Modal.setAppElement('#root')
 
-function AnimalFeed({ profile }) {
-    const [animals, setAnimals] = useState([])
-    const [pageCount, setPageCount] = useState(1)
-    const [filterPageCount, setFilterPageCount] = useState(1)
-    const [fetchError, setFetchError] = useState(false)
-    const [counter, setCounter] = useState(0)
+function AnimalFeed({ profile, animals }) {
+    const [filterPageCount, setFilterPageCount] = useState(1);
+    const [fetchError, setFetchError] = useState(false);
+    const [counter, setCounter] = useState(0);
 
-    const [filterSubmit, setFilterSubmit] = useState(false)
-    const [species, setSpecies] = useState('')
+    const [filterAnimals, setFilterAnimals] = useState([]);
+    const [filterSubmit, setFilterSubmit] = useState(false);
 
-    const [modalIsOpen, setModalIsOpen] = useState(false)
-    const [selectedAnimal, setSelectedAnimal] = useState(null)
-    const [imageSize, setImageSize] = useState('200px')
+    const [species, setSpecies] = useState('');
+    const [breed, setBreed] = useState('');
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [selectedAnimal, setSelectedAnimal] = useState(null);
+    const [imageSize, setImageSize] = useState('200px');
 
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
-
-    console.log(counter)
-
-    console.log(pageCount)
+    const [lowerIndex, setLowerIndex] = useState(0);
 
     useEffect(() => {
         if (animals.length === 0) {
@@ -44,27 +43,7 @@ function AnimalFeed({ profile }) {
         }
     }, [modalIsOpen])
 
-    function fetchAnimals(retries = 3) {
-        console.log('trying to fetch animals')
-        fetch(`/api/animals?page=${pageCount}`)
-        .then(response => {
-            if (!response.ok) { throw response }
-            return response.json()
-        })
-        .then(data => {
-            console.log(data)
-            setAnimals(data.animals)
-            setFetchError(false)
-        })
-        .catch((error) => {
-            if (retries > 0) {
-                setTimeout(() => fetchAnimals(retries - 1), 2000);
-            } else {
-                console.error('Error:', error);
-                setFetchError(true)
-            }
-        });
-    }
+
 
     function closeModal() {
         setModalIsOpen(false);
@@ -72,45 +51,30 @@ function AnimalFeed({ profile }) {
         setImageSize('200px');
     }
 
-    console.log(modalIsOpen)
-
+    useEffect (() => {
+        setFetchError(false)
+    }, [])
+    
     useEffect(() => {
-        console.log(filterSubmit)
+        setFilterAnimals([])
         if (!filterSubmit) {
             return;
         }
-        console.log('about to fetch')
-        function fetchFilteredAnimals(retries = 3) {
-            console.log('trying to fetch animals')
-            fetch(`/api/animals?species=${species}&page=${filterPageCount}`)
-            .then(response => {
-                if (!response.ok) { 
-                    console.log('response was ok')
-                    throw response 
-                }
-                return response.json()
-            })
-            .then(data => {
-                setAnimals(data.animals)
-                setFetchError(false)
-                console.log(data.type)
-            })
-            .catch((error) => {
-                if (retries > 0) {
-                    setTimeout(() => fetchFilteredAnimals(retries - 1), 2000);
-                } else {
-                    console.error('Error:', error);
-                    setFetchError(true)
-                }
-            });
-        }
-        fetchFilteredAnimals()
-    }, [filterSubmit, filterPageCount])
+        const filteredAnimals = animals.filter(animal => animal.species.toLowerCase() === species);
+        let filteredBreed = [];
+        if (species === 'dog' || species === 'cat') {
+            filteredBreed = filteredAnimals.filter(animal => animal.breeds.primary === breed || animal.breeds.secondary === breed);        
+            if (filteredBreed.length > 0) {
+                setFilterAnimals(filteredBreed);
+            } else if (filteredBreed.length === 0 && breed !== '') {
+                alert('No animals of that breed were found.');
+                setFilterAnimals(filteredAnimals);
+            } else if (breed === '') {
+                setFilterAnimals(filteredAnimals);
+            }
+        }     
+    }, [filterSubmit, filterPageCount]);
 
-
-    useEffect(() => {
-        fetchAnimals();
-    }, [pageCount, fetchError]); 
 
     const nextPhoto = () => {
         setCurrentPhotoIndex((currentPhotoIndex + 1) % selectedAnimal.photos.length);
@@ -124,6 +88,9 @@ function AnimalFeed({ profile }) {
         setSelectedAnimal(animal);
         setModalIsOpen(!modalIsOpen);
     }
+
+    console.log(lowerIndex)
+
 
     function handleAdoptionConsideration(animal) {
         const animalToSave = {
@@ -145,7 +112,7 @@ function AnimalFeed({ profile }) {
         };
         console.log(animalToSave)
     
-        fetch('/save_animal', {
+        fetch('api/save_animal', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -176,37 +143,70 @@ function AnimalFeed({ profile }) {
         );
     }
 
+    console.log(animals)
+    console.log(filterAnimals)
+    console.log(species)
+
+    function handleBreedSelection(breed) {
+        console.log(breed)
+        setBreed(breed);
+    }
+
     return (
         <>
-                <div className="App">
+                <div className="main-page">
                 <h1 className="page-title">Adoptable Animals</h1>
                 <h2>Welcome to our loving community of animal enthusiasts! Dive into our latest array of furry friends seeking forever homes. From playful pups to graceful felines, each profile is a tale of hope and companionship waiting to be shared. Click through and discover your next loyal companion today.</h2>
                 <div className="animal-feed-container">
                     <div className="filters">
-                        <form onSubmit={handleFilterSubmit}>
-                            <h3>Filters:</h3>
-                            <select className='species-select' onChange={(e) => {
-                                setSpecies(e.target.value);
-                                setFilterSubmit(false);
-                            }}>
-                                <option value="">Select a species</option>
-                                <option value="barnyard">Barnyard</option>
-                                <option value="bird">Bird</option>
-                                <option value="cat">Cat</option>
-                                <option value="dog">Dog</option>
-                                <option value="horse">Horse</option>
-                                <option value="rabbit">Rabbit</option>
-                            </select>
-                            {(species === 'dog')
-                            ?
-                            <BreedFilter animals={filterSubmit ? animals : undefined}/>
-                            :
-                            null
+                    <form onSubmit={handleFilterSubmit}>
+                        <h3>Filters:</h3>
+                        <p>Species:</p>
+                        <select className='species-select' onChange={(e) => {
+                            setSpecies(e.target.value);
+                        }}
+                        value={species}
+                        >
+                            <option value="">Select a species</option>
+                            <option value="barnyard">Barnyard</option>
+                            <option value="bird">Bird</option>
+                            <option value="cat">Cat</option>
+                            <option value="dog">Dog</option>
+                            <option value="horse">Horse</option>
+                            <option value="rabbit">Rabbit</option>
+                        </select>
+                        {(species === 'dog')
+                        ?
+                        <div>
+                            <p>Breed:</p>
+                            <DogBreedFilter handleBreedSelection={handleBreedSelection}/>
+                        </div>
+                        :
+                        null
                         }
-                            <button>Search</button>
-                        </form>
+                        {(species === 'cat')
+                        ?
+                        <div>
+                            <p>Breed:</p>
+                            <CatBreedFilter handleBreedSelection={handleBreedSelection}/>
+                        </div>
+                        :
+                        null
+                        }
+                        {filterSubmit ? null : <button>Search</button>}
+                        {filterSubmit ?
+                        <button type="button" onClick={() => {
+                            setFilterSubmit(false);
+                            setFilterAnimals([]);
+                            setSpecies('');
+                            setBreed('');
+                            setLowerIndex(0);
+                        }}>Clear Filters</button>
+                        :
+                        null}
+                    </form>
                     </div>
-                    {animals.length === 0 
+                    {(animals.length === 0)
                     ? 
                     (
                     <div className="loading-icon">
@@ -215,10 +215,10 @@ function AnimalFeed({ profile }) {
                     )
                     :
                     <AnimalCard 
-                        animals={animals} 
-                        onAdoptionConsideration={handleAdoptionConsideration} 
+                        animals={filterAnimals.length > 0 ? filterAnimals : animals}
                         profile={profile}
                         handleAnimalClick={handleAnimalClick}
+                        lowerIndex={lowerIndex}
                     />
                     }
                 </div>
@@ -327,17 +327,15 @@ function AnimalFeed({ profile }) {
                 </Modal>
                 <button onClick={() => {
                     if (filterSubmit === true) {
-                        setFilterPageCount(filterPageCount === 1 ? 1 : filterPageCount - 1);
-                    } else {
-                        setPageCount(pageCount === 1 ? 1 : pageCount - 1);
+                        setLowerIndex(lowerIndex === 0 ? 0 : lowerIndex - 99);
                     }
+                    {(lowerIndex === 0) ? null : window.scrollTo(0, 0)}
                 }}>Previous Page</button>
                 <button onClick={() => {
                     if (filterSubmit === true) {
-                        setFilterPageCount(filterPageCount + 1);
-                    } else {
-                        setPageCount(pageCount + 1);
+                        setLowerIndex(((lowerIndex + 99) < filterAnimals.length) ? lowerIndex + 99 : lowerIndex);
                     }
+                    {((lowerIndex + 99) < filterAnimals.length) ?  window.scrollTo(0, 0) : null}
                 }}>Next Page</button>
             </div>
         </>

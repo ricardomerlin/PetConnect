@@ -19,6 +19,7 @@ class Foster_listing(db.Model, SerializerMixin):
     city = db.Column(db.String, nullable=False)
     state = db.Column(db.String, nullable=False)
     preference = db.Column(db.String, nullable=True)
+    description = db.Column(db.String, nullable=True)
     
     profile_id = db.Column(db.Integer, db.ForeignKey('profile_table.id'))
     

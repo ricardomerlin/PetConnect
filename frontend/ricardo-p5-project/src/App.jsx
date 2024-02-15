@@ -12,6 +12,7 @@ function App() {
   const [profileId, setProfileId] = useState(null)
   const [profile, setProfile] = useState(null)
   const [isTop, setIsTop] = useState(true);
+  const [animals, setAnimals] = useState([]);
 
     useEffect(() => {
       fetch(`api/check_session`).then((res) => {
@@ -26,25 +27,23 @@ function App() {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
-              },
+          },
           body: JSON.stringify({ 
               'username': username,
               'password': password
           }),
-    });
-
-
-    if (response.ok) {
-        console.log(response)
-        const data = await response.json();
-        setLoggedIn(true);
-        console.log(data.id)
-        setProfileId(data.id)
-    } else {
-        const errorData = await response.json().catch(() => null); 
-        console.log('Error:', errorData);
-    }
-    };
+      });
+  
+      if (response.ok) {
+          const data = await response.json();
+          setLoggedIn(true);
+          setProfileId(data.id);
+          fetchAnimals();
+      } else {
+          const errorData = await response.json().catch(() => null); 
+          console.log('Error:', errorData);
+      }
+  };
 
     const handleLogout = async () => {
       console.log('logouut button clicked')
@@ -94,55 +93,81 @@ function App() {
     }, []);
 
 
-  return (
-    <Router>
-      {profile ?
-      <div className="App">
-        {!isTop &&
-          <div className='pop-up-bar'>
-            <div className='side-links' style={{opacity: isTop ? 0 : 1}}>
-              <h2>PetConnect</h2>
-              <Link className='side-link' to="/">Adoptable Animals</Link>
-              <Link className='side-link' to="/profile">My Profile</Link>
-              <Link className='side-link' to="/foster">Foster</Link>
-            </div>
-          </div>
-        }
-        <nav className='top-bar' style={{opacity: isTop ? 1 : 0}}>
-          <div>
-            {isTop ?
-            <div className='links'>
-              <Link className='link' style={{opacity: isTop ? 1 : 0, marginLeft: '10px'}} to="/">Adoptable Animals</Link>
-              <Link className='link' style={{opacity: isTop ? 1 : 0}} to="/profile">My Profile</Link>
-              <Link className='link' style={{opacity: isTop ? 1 : 0}} to="/foster">Foster</Link>
-            </div>
-            :
-            null
+    function fetchAnimals(retries = 3) {
+        console.log('I AM FETCHING AGAIN')
+        fetch(`/api/animals`)
+        .then(response => {
+            if (!response.ok) { throw response }
+            return response.json()
+        })
+        .then(data => {
+            console.log('I AM FETCHING AGAIN')
+            console.log(data)
+            setAnimals(data)
+        })
+        .catch((error) => {
+            if (retries > 0) {
+                setTimeout(() => fetchAnimals(retries - 1), 2000);
+            } else {
+                console.error('Error:', error);
+                setFetchError(true)
             }
-          </div>
-          <h1>PetConnect</h1>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '10px' }}>
-            <div className='logout'>
-              <p>Welcome, {profile.name}!</p>
-              <img className='small-profile-pic' src={profile.profile_picture}/>
-              {isTop ? <button onClick={handleLogout}>Logout</button> : null}
+      });
+    }
+
+    useEffect(() => {
+      fetchAnimals();
+    }, []);
+
+
+
+    return (
+      <Router>
+        {profile ?
+        <div className="App">
+          {!isTop &&
+            <div className='pop-up-bar'>
+              <div className='side-links' style={{opacity: isTop ? 0 : 1}}>
+                <h2>PetConnect</h2>
+                <Link className='side-link' to="/">Adoptable Animals</Link>
+                <Link className='side-link' to="/profile">My Profile</Link>
+                <Link className='side-link' to="/foster">Foster</Link>
+              </div>
             </div>
-          </div>
-        </nav>
+          }
+          <nav className='top-bar' style={{opacity: isTop ? 1 : 0, display: 'flex', justifyContent: 'space-between'}}>
+            <h1>PetConnect</h1>
+            <div style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
+              {isTop ?
+              <div className='links'>
+                <Link className='link' style={{opacity: isTop ? 1 : 0, marginLeft: '10px'}} to="/">Adoptable Animals</Link>
+                <Link className='link' style={{opacity: isTop ? 1 : 0}} to="/profile">My Profile</Link>
+                <Link className='link' style={{opacity: isTop ? 1 : 0}} to="/foster">Foster</Link>
+              </div>
+              :
+              null
+              }
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', padding: '3vw' }}>
+                <p>Welcome Ricardo</p>
+                {profile.profile_picture ? <img src={profile.profile_picture} alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '50%', padding: '4px' }} /> : null}
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            </nav>
+          <Routes>
+            <Route path="/" element={<AnimalFeed animals={animals} profile={profile}/>} />
+            <Route path="/profile" element={<Profile animals={animals} profile={profile}/>} />
+            <Route path="/foster" element={<FosterList animals={animals} profile={profile}/>} />
+          </Routes>
+        </div>
+        :
         <Routes>
-          <Route path="/" element={<AnimalFeed profile={profile}/>} />
-          <Route path="/profile" element={<Profile profile={profile}/>} />
-          <Route path="/foster" element={<FosterList profile={profile}/>} />
+          <Route path='/' element={<Login handleLogin={handleLogin}/>}></Route>
+          <Route path="/profile" element={<Login handleLogin={handleLogin}/>} />
+          <Route path="/foster" element={<Login handleLogin={handleLogin}/>} />
         </Routes>
-      </div>
-      :
-      <Routes>
-        <Route path='/' element={<Login handleLogin={handleLogin}/>}></Route>
-        <Route path="/profile" element={<Login handleLogin={handleLogin}/>} />
-        <Route path="/foster" element={<Login handleLogin={handleLogin}/>} />
-      </Routes>
-      }
-    </Router>
+        }
+      </Router>
   )
 }
 

@@ -7,12 +7,6 @@ function Login({ handleLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [creatingProfile, setCreatingProfile] = useState(false);
-    const [dog1, setDog1] = useState('');
-    const [dog2, setDog2] = useState('');
-    const [cat1, setCat1] = useState('');
-    const [cat2, setCat2] = useState('');
-    const [dogArray, setDogArray] = useState([]);
-    const [catArray, setCatArray] = useState([]);
 
     const handleSubmit = (event) => {
         event.preventDefault();

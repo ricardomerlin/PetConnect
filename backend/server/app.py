@@ -54,8 +54,6 @@ def get_token():
 
 @app.get('/api/animals')
 def get_animals():
-
-    # Get the access token
     token_response = requests.post('https://api.petfinder.com/v2/oauth2/token', data={
         'grant_type': 'client_credentials',
         'client_id': os.getenv('CLIENT_ID'),
@@ -63,10 +61,14 @@ def get_animals():
     })
     access_token = token_response.json().get('access_token')
 
-    animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=100', headers={
-        'Authorization': f'Bearer {access_token}',
-    })
-    return jsonify(animals_response.json()), animals_response.status_code
+    all_animals = []
+    for pageNumber in range(1, 11):
+        animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=100&page={pageNumber}', headers={
+            'Authorization': f'Bearer {access_token}',
+        })
+        all_animals.extend(animals_response.json().get('animals', []))
+
+    return jsonify(all_animals)
 
 @app.get('/api/profiles')
 def get_profiles():
@@ -81,7 +83,7 @@ def get_profile_by_id(id):
     profile_dict = profile.to_dict()
     return profile_dict, 202
 
-@app.get('/animals')
+@app.get('/api/saved_animals')
 def get_all_animals():
     animals = Saved_Animal.query.all()
     return jsonify([animal.to_dict() for animal in animals])
@@ -95,7 +97,7 @@ def get_profile_animals():
     else:
         return jsonify([])
     
-@app.get('/foster_listings')
+@app.get('/api/foster_listings')
 def get_foster_listings():
     foster_listings = Foster_listing.query.all()
     return jsonify([foster.to_dict() for foster in foster_listings])
@@ -172,8 +174,10 @@ def post_foster_listing():
             city = data.get('city'),
             state = data.get('state'),
             preference = data.get('preference'),
-            profile_id = data.get('profile_id')
+            profile_id = data.get('profile_id'),
+            description = data.get('description')
         )
+        print(new_foster_listing)
         db.session.add(new_foster_listing)
         db.session.commit()
         return {'message': 'Foster listing saved successfully'}, 201
