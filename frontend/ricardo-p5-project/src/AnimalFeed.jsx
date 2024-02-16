@@ -64,7 +64,7 @@ function AnimalFeed({ profile, animals }) {
         let filteredBreed = [];
         if (species === 'dog' || species === 'cat') {
             filteredBreed = filteredAnimals.filter(animal => animal.breeds.primary === breed || animal.breeds.secondary === breed);        
-            if (filteredBreed.length > 0 && animal.species.toLowerCase() === species) {
+            if (filteredBreed.length > 0) {
                 setFilterAnimals(filteredBreed);
             } else if (filteredBreed.length === 0 && breed !== '') {
                 alert('No animals of that breed were found.');

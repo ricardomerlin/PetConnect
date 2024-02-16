@@ -542,7 +542,7 @@ span {
   margin: 10px;
   padding: 20px;
   border: 2px solid blueviolet;
-  width: calc((100% / 3) - 70px);
+  flex: 1 0 calc(33.33% - 70px); /* This line is changed */
 }
 
 .profile-pic {
