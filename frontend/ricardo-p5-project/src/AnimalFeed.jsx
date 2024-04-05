@@ -168,12 +168,12 @@ function AnimalFeed({ profile, animals }) {
                         value={species}
                         >
                             <option value="">Select a species</option>
-                            <option value="barnyard">Barnyard</option>
-                            <option value="bird">Bird</option>
+                            {/* <option value="barnyard">Barnyard</option> */}
+                            {/* <option value="bird">Bird</option> */}
                             <option value="cat">Cat</option>
                             <option value="dog">Dog</option>
-                            <option value="horse">Horse</option>
-                            <option value="rabbit">Rabbit</option>
+                            {/* <option value="horse">Horse</option> */}
+                            {/* <option value="rabbit">Rabbit</option> */}
                         </select>
                         {(species === 'dog')
                         ?
@@ -325,18 +325,22 @@ function AnimalFeed({ profile, animals }) {
                     :
                     null}
                 </Modal>
-                <button onClick={() => {
-                    if (filterSubmit === true) {
+                <button style={{marginRight: '2px', marginBottom:'20px'}}onClick={() => {
+                    console.log(lowerIndex)
+                    if (filterSubmit === false) {
                         setLowerIndex(lowerIndex === 0 ? 0 : lowerIndex - 99);
+                        console.log('Previous page clicked')
                     }
                     {(lowerIndex === 0) ? null : window.scrollTo(0, 0)}
-                }}>Previous Page</button>
-                <button onClick={() => {
-                    if (filterSubmit === true) {
-                        setLowerIndex(((lowerIndex + 99) < filterAnimals.length) ? lowerIndex + 99 : lowerIndex);
+                }}>{'<'} Previous Page</button>
+                <button style={{marginLeft: '2px', marginBottom: '20px'}}onClick={() => {
+                    console.log(lowerIndex)
+                    if (filterSubmit === false) {
+                        setLowerIndex(((lowerIndex + 99) > filterAnimals.length) ? lowerIndex + 99 : lowerIndex);
+                        console.log('Next page clicked')
                     }
                     {((lowerIndex + 99) < filterAnimals.length) ?  window.scrollTo(0, 0) : null}
-                }}>Next Page</button>
+                }}>Next Page {'>'}</button>
             </div>
         </>
     )

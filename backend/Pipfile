@@ -11,6 +11,7 @@ requests = "*"
 flask-cors = "*"
 python-dotenv = "*"
 flask-bcrypt = "*"
+schedule = "*"
 
 [dev-packages]
 

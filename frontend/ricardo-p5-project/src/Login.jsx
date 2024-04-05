@@ -17,6 +17,12 @@ function Login({ handleLogin }) {
         return <CreateProfile handleLogin={handleLogin}/>;
     }
 
+    // useEffect(() => {
+    //     fetch('/api/animals')
+    //     .then((res) => res.json())
+    //     .then((data) => console.log(data));
+    // }, [username]);
+
     return (
         <div className='login-container'>
             <DogPics />

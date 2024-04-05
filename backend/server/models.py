@@ -10,6 +10,36 @@ metadata = MetaData(naming_convention={
 
 db = SQLAlchemy()
 
+class Animal(db.Model, SerializerMixin):
+    __tablename__ = 'animal_table'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    petfinder_id = db.Column(db.String)
+    age = db.Column(db.String)
+    declawed = db.Column(db.String)
+    house_trained = db.Column(db.String)
+    shots = db.Column(db.String)
+    spayed_neutered = db.Column(db.String)
+    special_needs = db.Column(db.String)
+    primary_breed = db.Column(db.String)
+    coat = db.Column(db.String)
+    primary_color = db.Column(db.String)
+    contact_address_city = db.Column(db.String)
+    contact_address_state = db.Column(db.String)
+    contact_email = db.Column(db.String)
+    contact_phone = db.Column(db.String)
+    good_with_cats = db.Column(db.String)
+    good_with_children = db.Column(db.String)
+    good_with_dogs = db.Column(db.String)
+    name = db.Column(db.String)
+    photo = db.Column(db.String)
+    size = db.Column(db.String)
+    species = db.Column(db.String)
+    status = db.Column(db.String)
+    url = db.Column(db.String)
+
+
 class Foster_listing(db.Model, SerializerMixin):
     __tablename__ =  'foster_listing_table'
 
@@ -54,14 +84,28 @@ class Saved_Animal(db.Model, SerializerMixin):
     __tablename__ = 'saved_animal_table'
 
     id = db.Column(db.Integer, primary_key=True)
-    petfinder_id = db.Column(db.Integer, nullable=False, unique=True)
-    name = db.Column(db.String(100), nullable=False)
-    species = db.Column(db.String(100), nullable=True)
-    breed = db.Column(db.String(100), nullable=True)
-    color = db.Column(db.String(100), nullable=True)
-    age = db.Column(db.String(100), nullable=True)
-    pic = db.Column(db.String(500), nullable=True)
-    profile_url = db.Column(db.String(500), nullable=True)
+    age = db.Column(db.String)
+    declawed = db.Column(db.String)
+    house_trained = db.Column(db.String)
+    shots = db.Column(db.String)
+    spayed_neutered = db.Column(db.String)
+    special_needs = db.Column(db.String)
+    primary_breed = db.Column(db.String)
+    coat = db.Column(db.String)
+    primary_color = db.Column(db.String)
+    contact_address_city = db.Column(db.String)
+    contact_address_state = db.Column(db.String)
+    contact_email = db.Column(db.String)
+    contact_phone = db.Column(db.String)
+    good_with_cats = db.Column(db.String)
+    good_with_children = db.Column(db.String)
+    good_with_dogs = db.Column(db.String)
+    name = db.Column(db.String)
+    photo = db.Column(db.String)
+    size = db.Column(db.String)
+    species = db.Column(db.String)
+    status = db.Column(db.String)
+    url = db.Column(db.String)
 
     profile_id = db.Column(db.Integer, db.ForeignKey('profile_table.id'))
 

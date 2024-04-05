@@ -1,15 +1,18 @@
 from flask import Flask, request, jsonify, session
+from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask import make_response
-from models import db, Profile, Saved_Animal, Foster_listing
+from models import db, Profile, Saved_Animal, Foster_listing, Animal
 from datetime import datetime
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 
 import requests
 import os
+
+scheduler = APScheduler()
 
 load_dotenv()
 
@@ -62,13 +65,54 @@ def get_animals():
     access_token = token_response.json().get('access_token')
 
     all_animals = []
-    for pageNumber in range(1, 11):
+    for pageNumber in range(1, 101):
         animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=100&page={pageNumber}', headers={
             'Authorization': f'Bearer {access_token}',
         })
-        all_animals.extend(animals_response.json().get('animals', []))
+        animals = animals_response.json().get('animals', [])
+        all_animals.extend(animals)
+        print(pageNumber)
+
+        for animal_data in animals:
+            animal = Animal(
+                petfinder_id=animal_data.get('id'),
+                age=animal_data.get('age'),
+                declawed=animal_data.get('attributes', {}).get('declawed'),
+                house_trained = animal_data.get('attributes', {}).get('house_trained'),                
+                shots=animal_data.get('attributes', {}).get('shots_current'),
+                spayed_neutered=animal_data.get('attributes', {}).get('spayed_neutered'),
+                special_needs=animal_data.get('attributes', {}).get('special_needs'),
+                primary_breed=animal_data.get('breeds', {}).get('primary'),
+                coat=animal_data.get('coat'),
+                primary_color=animal_data.get('colors', {}).get('primary'),
+                contact_address_city=animal_data.get('contact', {}).get('address', {}).get('city'),
+                contact_address_state=animal_data.get('contact', {}).get('address', {}).get('state'),
+                contact_email=animal_data.get('contact', {}).get('email'),
+                contact_phone=animal_data.get('contact', {}).get('phone'),
+                good_with_cats=animal_data.get('environment', {}).get('cats'),
+                good_with_children=animal_data.get('environment', {}).get('children'),
+                good_with_dogs=animal_data.get('environment', {}).get('dogs'),
+                name=animal_data.get('name'),
+                photo=animal_data.get('photo'),
+                size=animal_data.get('size'),
+                species=animal_data.get('species'),
+                status=animal_data.get('status'),
+                url=animal_data.get('url')
+            )
+            db.session.add(animal)
+        db.session.commit()
 
     return jsonify(all_animals)
+
+@scheduler.task('cron', id='job', day_of_week='*', hour=0, minute=39)
+def job():
+    with app.app_context():
+        db.session.query(Animal).delete()
+        db.session.commit()
+        get_animals()
+
+scheduler.init_app(app)
+scheduler.start()
 
 @app.get('/api/profiles')
 def get_profiles():
@@ -114,15 +158,29 @@ def save_animal():
             return {'error': 'This animal already exists within your saves'}, 400
         print('Getting ready for new saved animal')
         new_saved_animal = Saved_Animal(
-            petfinder_id = data.get('petfinder_id'),
-            name = data.get('name'),
-            species = data.get('species'),
-            breed = data.get('breed'),
-            color = data.get('color'),
-            age = data.get('age'),
-            pic = data.get('pic'),
-            profile_url = data.get('profile_url'),
-            profile_id = data.get('profile_id')
+            id=data.get('id'),
+            age=data.get('age'),
+            declawed=data.get('attributes', {}).get('declawed'),
+            house_trained = data.get('attributes', {}).get('house_trained'),                
+            shots=data.get('attributes', {}).get('shots_current'),
+            spayed_neutered=data.get('attributes', {}).get('spayed_neutered'),
+            special_needs=data.get('attributes', {}).get('special_needs'),
+            primary_breed=data.get('breeds', {}).get('primary'),
+            coat=data.get('coat'),
+            primary_color=data.get('colors', {}).get('primary'),
+            contact_address_city=data.get('contact', {}).get('address', {}).get('city'),
+            contact_address_state=data.get('contact', {}).get('address', {}).get('state'),
+            contact_email=data.get('contact', {}).get('email'),
+            contact_phone=data.get('contact', {}).get('phone'),
+            good_with_cats=data.get('environment', {}).get('cats'),
+            good_with_children=data.get('environment', {}).get('children'),
+            good_with_dogs=data.get('environment', {}).get('dogs'),
+            name=data.get('name'),
+            photo=data.get('photo'),
+            size=data.get('size'),
+            species=data.get('species'),
+            status=data.get('status'),
+            url=data.get('url')
         )
         print(new_saved_animal)
         print('Hello i saved?')
@@ -139,11 +197,9 @@ def save_profile():
     try:
         data = request.get_json()
 
-        # Check if username already exists in the database
         existing_profile = Profile.query.filter_by(username=data['username']).first()
 
         if existing_profile:
-            # If the username already exists, return an error message
             return {'error': 'Profile with this username already exists'}, 400
 
         new_profile = Profile(
