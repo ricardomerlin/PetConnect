@@ -215,6 +215,46 @@ function AnimalFeed({ profile, animals }) {
                         :
                         null
                         }
+                        <div>
+                            <p>Age:</p>
+                            <select className='age-select'>
+                                <option value="baby">Baby</option>
+                                <option value="young">Young</option>
+                                <option value="adult">Adult</option>
+                                <option value="senior">Senior</option>
+                            </select>
+                        </div>
+                        <div>
+                            <p>Size:</p>
+                            <select className='size-select'>
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                                <option value="extra-large">Extra Large</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="good-with-cats">Good with Cats</label>
+                            <input type="checkbox" id="good-with-cats" name="good-with-cats" value="good-with-cats"/>
+                            <label htmlFor="good-with-dogs">Good with Dogs</label>
+                            <input type="checkbox" id="good-with-dogs" name="good-with-dogs" value="good-with-dogs"/>
+                            <label htmlFor="good-with-children">Good with Children</label>
+                            <input type="checkbox" id="good-with-children" name="good-with-children" value="good-with-children"/>
+                        </div>
+                        <div>
+                            <label htmlFor="house-trained">House Trained</label>
+                            <input type="checkbox" id="house-trained" name="house-trained" value="house-trained"/>
+                            <label htmlFor="declawed">Declawed</label>
+                            <input type="checkbox" id="declawed" name="declawed" value="declawed"/>
+                            <label htmlFor="spayed-neutered">Spayed/Neutered</label>
+                            <input type="checkbox" id="spayed-neutered" name="spayed-neutered" value="spayed-neutered"/>
+                        </div>
+                        <div>
+                            <label htmlFor="city">City</label>
+                            <input type="text" id="city" name="city"/>
+                            <label htmlFor="state">State</label>
+                            <input type="text" id="state" name="state"/>
+                        </div>
                         {filterSubmit ? null : <button>Search</button>}
                         {filterSubmit ?
                         <button type="button" onClick={() => {
