@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Login from './Login'
+import App from './App'
 
 function CreateProfile({ handleLogin }) {
     const [name, setName] = useState('');
@@ -47,6 +48,7 @@ function CreateProfile({ handleLogin }) {
 
         if (response.ok) {
             console.log('Profile saved successfully:', data);
+            handleLogin(username, password);
         } else {
             console.error('Error saving profile:', data);
         }

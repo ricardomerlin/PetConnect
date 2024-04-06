@@ -63,7 +63,7 @@ function AnimalFeed({ profile, animals }) {
         const filteredAnimals = animals.filter(animal => animal.species.toLowerCase() === species);
         let filteredBreed = [];
         if (species === 'dog' || species === 'cat') {
-            filteredBreed = filteredAnimals.filter(animal => animal.breeds.primary === breed || animal.breeds.secondary === breed);        
+            filteredBreed = filteredAnimals.filter(animal => animal.primary_breed === breed);        
             if (filteredBreed.length > 0) {
                 setFilterAnimals(filteredBreed);
             } else if (filteredBreed.length === 0 && breed !== '') {
@@ -72,7 +72,9 @@ function AnimalFeed({ profile, animals }) {
             } else if (breed === '') {
                 setFilterAnimals(filteredAnimals);
             }
-        }     
+        } else {
+            setFilterAnimals(filteredAnimals);
+        }  
     }, [filterSubmit, filterPageCount]);
 
 
@@ -90,29 +92,40 @@ function AnimalFeed({ profile, animals }) {
     }
 
     console.log(lowerIndex)
+    console.log(selectedAnimal)
 
 
     function handleAdoptionConsideration(animal) {
         const animalToSave = {
-            petfinder_id: animal.id,
-            name: animal.name,
-            species: animal.species,
-            breed: animal.breeds.mixed ? (animal.breeds.secondary ? animal.breeds.primary + ', ' + animal.breeds.secondary : animal.breeds.primary) : animal.breeds.primary,
-            color: animal.colors.primary || animal.colors.secondary,
+            petfinder_id: animal.petfinder_id,
             age: animal.age,
-            pic: animal.photos[0] 
-            ? animal.photos[0].medium 
-            : animal.species.toLowerCase() === 'dog' 
-                ? 'https://png.pngtree.com/png-clipart/20230308/ourmid/pngtree-cartoon-dog-sticker-cute-puppy-png-image_6629456.png' 
-                : animal.species.toLowerCase() === 'cat' 
-                    ? 'https://static.vecteezy.com/system/resources/previews/013/078/569/non_2x/illustration-of-cute-colored-cat-cartoon-cat-image-in-format-suitable-for-children-s-book-design-elements-introduction-of-cats-to-children-books-or-posters-about-animal-free-png.png' 
-                    : 'default-image-url',
-            profile_url: animal.url,
+            declawed: animal.declawed,
+            house_trained: animal.house_trained,
+            shots: animal.shots,
+            sex: animal.sex,
+            spayed_neutered: animal.spayed_neutered,
+            special_needs: animal.special_needs,
+            primary_breed: animal.primary_breed,
+            coat: animal.coat,
+            primary_color: animal.primary_color,
+            contact_address_city: animal.contact_address_city,
+            contact_address_state: animal.contact_address_state,
+            contact_email: animal.contact_email,
+            contact_phone: animal.contact_phone,
+            good_with_cats: animal.good_with_cats,
+            good_with_children: animal.good_with_children,
+            good_with_dogs: animal.good_with_dogs,
+            name: animal.name,
+            photo: animal.photo,
+            size: animal.size,
+            species: animal.species,
+            status: animal.status,
+            url: animal.url,
             profile_id: profile.id
         };
         console.log(animalToSave)
     
-        fetch('api/save_animal', {
+        fetch('/api/save_animal', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -133,16 +146,6 @@ function AnimalFeed({ profile, animals }) {
         setFilterSubmit(true)
     }
 
-    function mapTags(selectedAnimal) {
-        return (
-            <div className="tags">
-                {selectedAnimal.tags.map(tag => (
-                    <span key={tag} className="tag">{tag}</span>
-                ))}
-            </div>
-        );
-    }
-
     console.log(animals)
     console.log(filterAnimals)
     console.log(species)
@@ -160,7 +163,7 @@ function AnimalFeed({ profile, animals }) {
                 <div className="animal-feed-container">
                     <div className="filters">
                     <form onSubmit={handleFilterSubmit}>
-                        <h3>Filters:</h3>
+                        <h3>Filter by:</h3>
                         <p>Species:</p>
                         <select className='species-select' onChange={(e) => {
                             setSpecies(e.target.value);
@@ -168,12 +171,31 @@ function AnimalFeed({ profile, animals }) {
                         value={species}
                         >
                             <option value="">Select a species</option>
-                            {/* <option value="barnyard">Barnyard</option> */}
-                            {/* <option value="bird">Bird</option> */}
+                            <option value="alpaca">Alpaca</option>
                             <option value="cat">Cat</option>
+                            <option value="chicken">Chicken</option>
+                            <option value="chinchilla">Chinchilla</option>
                             <option value="dog">Dog</option>
-                            {/* <option value="horse">Horse</option> */}
-                            {/* <option value="rabbit">Rabbit</option> */}
+                            <option value="dove">Dove</option>
+                            <option value="duck">Duck</option>
+                            <option value="ferret">Ferret</option>
+                            <option value="finch">Finch</option>
+                            <option value="gerbil">Gerbil</option>
+                            <option value="goat">Goat</option>
+                            <option value="guinea pig">Guinea Pig</option>
+                            <option value="hamster">Hamster</option>
+                            <option value="horse">Horse</option>
+                            <option value="mouse">Mouse</option>
+                            <option value="parakeet">Parakeet</option>
+                            <option value="parrot">Parrot</option>
+                            <option value="pheasant">Pheasant</option>
+                            <option value="pig">Pig</option>
+                            <option value="rabbit">Rabbit</option>
+                            <option value="rat">Rat</option>
+                            <option value="sheep">Sheep</option>
+                            <option value="snake">Snake</option>
+                            <option value="sugar glider">Sugar Glider</option>
+                            <option value="turtle">Turtle</option>
                         </select>
                         {(species === 'dog')
                         ?
@@ -241,8 +263,7 @@ function AnimalFeed({ profile, animals }) {
                             ) : (
                                 <p className='animal-card-text'><strong>{selectedAnimal.age} {selectedAnimal.gender} {selectedAnimal.breeds.primary}</strong></p>
                                 ))}
-                            {mapTags(selectedAnimal)}
-                            {selectedAnimal.photos[0] ? (
+                            {selectedAnimal.photo ? (
                                 <div className="carousel-image" style={{display: 'flex', position: 'relative'}}>
                                     {(imageSize === '500px' && selectedAnimal.photos.length > 1) ?
                                         <button onClick={prevPhoto} style={{position: 'absolute', left: 0, border: '2px solid black'}}>Previous Photo</button>
@@ -250,11 +271,11 @@ function AnimalFeed({ profile, animals }) {
                                         null
                                     }
                                     <img 
-                                        src={selectedAnimal.photos[currentPhotoIndex]?.medium || 'default-image-url'} 
+                                        src={selectedAnimal.photo || 'default-image-url'} 
                                         alt={selectedAnimal.name} 
                                         onLoad={(e) => e.target.style.opacity = 1}
                                         style={{opacity: 0, transition: 'opacity 0.5s', width: imageSize, border: '2px solid black'}}
-                                        onClick={() => {(selectedAnimal.photos[0]?.medium && imageSize === '200px') ? setImageSize('500px') : setImageSize('200px')}}
+                                        onClick={() => {(selectedAnimal.photo && imageSize === '200px') ? setImageSize('500px') : setImageSize('200px')}}
                                     />
                                     {(imageSize === '500px' && selectedAnimal.photos.length > 1) ?
                                         <button onClick={nextPhoto} style={{position: 'absolute', right: 0, border: '2px solid black'}}>Next Photo</button>
@@ -276,44 +297,40 @@ function AnimalFeed({ profile, animals }) {
                                 alt={selectedAnimal.name} 
                                 onLoad={(e) => e.target.style.opacity = 1}
                                 style={{opacity: 0, transition: 'opacity 0.5s', width: imageSize, objectFit: 'contain', padding: '1vw'}}
-                                onClick={() => {(selectedAnimal.photos[0]?.medium && imageSize === '200px') ? setImageSize('500px') : setImageSize('200px')}}
+                                onClick={() => {(selectedAnimal.photo && imageSize === '200px') ? setImageSize('500px') : setImageSize('200px')}}
                             />
                             ) : null}
                             </div>
                             {selectedAnimal.status ? <p><strong>{selectedAnimal.name} is available for adoption!</strong></p> : null}
                             <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <div className="left-card">
-                                {selectedAnimal.colors.primary ? <p><u><strong>Color{selectedAnimal.colors.secondary ? 's' : null}</strong></u>: {selectedAnimal.colors.primary}{selectedAnimal.colors.secondary ? ', ' + selectedAnimal.colors.secondary : null}</p> : null}
+                                {selectedAnimal.primary_color ? <p><u><strong>Color:</strong></u> {selectedAnimal.primary_color}</p> : null}
                                 <p><u><strong>Size:</strong></u> {selectedAnimal.size}</p>
                             </div>
                             <div className="right-card">
-                                {(selectedAnimal.species.toLowerCase() === 'cat') ? <p><u><strong>Declawed:</strong></u>{selectedAnimal.attributes.declawed ? ' Yes' : ' No'}</p> : null}                                
-                                <p><u><strong>House trained?</strong></u>{selectedAnimal.attributes.house_trained ? ' Yes' : ' No'}</p>                            
-                                <p><u><strong>Up to date on shots?</strong></u>{selectedAnimal.attributes.shots_current ? ' Yes' : ' No'}</p>
-                                <p><u><strong>{(selectedAnimal.gender.toLowerCase() === 'male') ? 'Neutered?' : 'Spayed?'}</strong></u>{selectedAnimal.attributes.spayed_neutered ? ' Yes' : ' No'}</p>
+                                {(selectedAnimal.species.toLowerCase() === 'cat') ? <p><u><strong>Declawed:</strong></u>{selectedAnimal.declawed === '1' ? ' Yes' : ' No'}</p> : null}                                
+                                <p><u><strong>House trained?</strong></u>{selectedAnimal.house_trained === '1' ? ' Yes' : ' No'}</p>                            
+                                <p><u><strong>Up to date on shots?</strong></u>{selectedAnimal.shots === '0' ? ' Yes' : ' No'}</p>
+                                <p><u><strong>{(selectedAnimal.sex.toLowerCase() === 'male') ? 'Neutered?' : 'Spayed?'}</strong></u>{selectedAnimal.spayed_neutered === '1' ? ' Yes' : ' No'}</p>
                             </div>
                         </div>
-                        {/* <span> */}
                             <p className="environment-text"><strong>Environment:</strong>
-                                <span className="environment-condition">{selectedAnimal.environment.cats ? "✔️ Good with cats." : "ⅹ Not good with cats."}</span>
-                                <span className="environment-condition">{selectedAnimal.environment.dogs ? "✔️ Good with dogs." : "ⅹ Not good with dogs."}</span>
-                                <span className="environment-condition">{selectedAnimal.environment.children ? "✔️ Good with children." : "ⅹ Not good with children."}</span>
+                                <span className="environment-condition">{selectedAnimal.good_with_cats ? "✔️ Good with cats." : "ⅹ Not good with cats."}</span>
+                                <span className="environment-condition">{selectedAnimal.good_with_dogs ? "✔️ Good with dogs." : "ⅹ Not good with dogs."}</span>
+                                <span className="environment-condition">{selectedAnimal.good_with_children ? "✔️ Good with children." : "ⅹ Not good with children."}</span>
                             </p>
-                            {selectedAnimal.contact.address || selectedAnimal.contact.email || selectedAnimal.contact.phone ? 
+                            {selectedAnimal.contact_address || selectedAnimal.contact_email || selectedAnimal.contact_phone ? 
                             <p className="contact-information"><strong>Contact Information:</strong>
-                                {selectedAnimal.contact.address ? 
+                                {selectedAnimal.contact_address_city || selectedAnimal.contact_address_state ? 
                                     <span className="contact-text">
-                                    <strong>Location:</strong> {selectedAnimal.contact.address.address1 ? [selectedAnimal.contact.address.address1, <br/>] : null}                                        
-                                        {selectedAnimal.contact.address.address2 ? [selectedAnimal.contact.address.address2, <br/>] : null}
-                                        {selectedAnimal.contact.address.city ? selectedAnimal.contact.address.city + ', ' + selectedAnimal.contact.address.state + ' ' + selectedAnimal.contact.address.postcode: null}
+                                    <strong>Location: </strong>{selectedAnimal.contact_address_city}, {selectedAnimal.contact_address_state}                                       
                                     </span> 
                                 : null}                                
-                                {selectedAnimal.contact.email ? <span className="contact-text"><strong>Email:&nbsp;</strong>{selectedAnimal.contact.email}</span> : null}
-                                {selectedAnimal.contact.phone ? <span className="contact-text"><strong>Phone:</strong> {selectedAnimal.contact.phone}</span> : null}
+                                {selectedAnimal.contact_email ? <span className="contact-text"><strong>Email:&nbsp;</strong>{selectedAnimal.contact_email}</span> : null}
+                                {selectedAnimal.contact_phone ? <span className="contact-text"><strong>Phone:</strong> {selectedAnimal.contact_phone}</span> : null}
                             </p>
                             :
                             null}
-                        {/* </span> */}
                         <h5 className='animal-card-text'>Interested in {selectedAnimal.name}? <a href={selectedAnimal.url} target="_blank" rel="noopener noreferrer">Submit an Inquiry here.</a></h5>
                         <h4 className='animal-card-text'>Want to save {selectedAnimal.name}'s information for later?</h4>
                         <button className='add-adopt-button' onClick={() => handleAdoptionConsideration(selectedAnimal)}>Click to add {selectedAnimal.name} <><br /> to your profile.</></button>

@@ -20,6 +20,7 @@ class Animal(db.Model, SerializerMixin):
     declawed = db.Column(db.String)
     house_trained = db.Column(db.String)
     shots = db.Column(db.String)
+    sex = db.Column(db.String)
     spayed_neutered = db.Column(db.String)
     special_needs = db.Column(db.String)
     primary_breed = db.Column(db.String)
@@ -84,10 +85,12 @@ class Saved_Animal(db.Model, SerializerMixin):
     __tablename__ = 'saved_animal_table'
 
     id = db.Column(db.Integer, primary_key=True)
+    petfinder_id = db.Column(db.String, unique=True)
     age = db.Column(db.String)
     declawed = db.Column(db.String)
     house_trained = db.Column(db.String)
     shots = db.Column(db.String)
+    sex = db.Column(db.String)
     spayed_neutered = db.Column(db.String)
     special_needs = db.Column(db.String)
     primary_breed = db.Column(db.String)
@@ -106,7 +109,6 @@ class Saved_Animal(db.Model, SerializerMixin):
     species = db.Column(db.String)
     status = db.Column(db.String)
     url = db.Column(db.String)
-
     profile_id = db.Column(db.Integer, db.ForeignKey('profile_table.id'))
 
     profile = db.relationship('Profile', back_populates='saved_animals')

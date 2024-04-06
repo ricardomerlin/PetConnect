@@ -65,7 +65,7 @@ def get_animals():
     access_token = token_response.json().get('access_token')
 
     all_animals = []
-    for pageNumber in range(1, 101):
+    for pageNumber in range(1, 2):
         animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=100&page={pageNumber}', headers={
             'Authorization': f'Bearer {access_token}',
         })
@@ -80,6 +80,7 @@ def get_animals():
                 declawed=animal_data.get('attributes', {}).get('declawed'),
                 house_trained = animal_data.get('attributes', {}).get('house_trained'),                
                 shots=animal_data.get('attributes', {}).get('shots_current'),
+                sex=animal_data.get('gender'),
                 spayed_neutered=animal_data.get('attributes', {}).get('spayed_neutered'),
                 special_needs=animal_data.get('attributes', {}).get('special_needs'),
                 primary_breed=animal_data.get('breeds', {}).get('primary'),
@@ -93,7 +94,7 @@ def get_animals():
                 good_with_children=animal_data.get('environment', {}).get('children'),
                 good_with_dogs=animal_data.get('environment', {}).get('dogs'),
                 name=animal_data.get('name'),
-                photo=animal_data.get('photo'),
+                photo = animal_data.get('photos')[0].get('medium') if animal_data.get('photos') else None,
                 size=animal_data.get('size'),
                 species=animal_data.get('species'),
                 status=animal_data.get('status'),
@@ -109,7 +110,7 @@ def get_animals_list():
     animals = Animal.query.all()
     return jsonify([animal.to_dict() for animal in animals])
 
-@scheduler.task('cron', id='job', day_of_week='*', hour=13, minute=45)
+@scheduler.task('cron', id='job', day_of_week='*', hour=3, minute=7)
 def job():
     with app.app_context():
         db.session.query(Animal).delete()
@@ -158,34 +159,35 @@ def save_animal():
         print(data)
 
         existing_animal = Saved_Animal.query.filter_by(petfinder_id=data.get('petfinder_id')).first()
-
         if existing_animal:
             return {'error': 'This animal already exists within your saves'}, 400
         print('Getting ready for new saved animal')
         new_saved_animal = Saved_Animal(
             id=data.get('id'),
             age=data.get('age'),
-            declawed=data.get('attributes', {}).get('declawed'),
-            house_trained = data.get('attributes', {}).get('house_trained'),                
-            shots=data.get('attributes', {}).get('shots_current'),
-            spayed_neutered=data.get('attributes', {}).get('spayed_neutered'),
-            special_needs=data.get('attributes', {}).get('special_needs'),
-            primary_breed=data.get('breeds', {}).get('primary'),
+            declawed=data.get('declawed'),
+            house_trained = data.get('house_trained'),                
+            shots=data.get('shots_current'),
+            sex=data.get('sex'),
+            spayed_neutered=data.get('spayed_neutered'),
+            special_needs=data.get('special_needs'),
+            primary_breed=data.get('primary_breed'),
             coat=data.get('coat'),
-            primary_color=data.get('colors', {}).get('primary'),
-            contact_address_city=data.get('contact', {}).get('address', {}).get('city'),
-            contact_address_state=data.get('contact', {}).get('address', {}).get('state'),
-            contact_email=data.get('contact', {}).get('email'),
-            contact_phone=data.get('contact', {}).get('phone'),
-            good_with_cats=data.get('environment', {}).get('cats'),
-            good_with_children=data.get('environment', {}).get('children'),
-            good_with_dogs=data.get('environment', {}).get('dogs'),
+            primary_color=data.get('primary_color'),
+            contact_address_city=data.get('contact_address_city'),
+            contact_address_state=data.get('contact_address_state'),
+            contact_email=data.get('contact_email'),
+            contact_phone=data.get('contact_phone'),
+            good_with_cats=data.get('good_with_cats'),
+            good_with_children=data.get('good_with_children'),
+            good_with_dogs=data.get('good_with_dogs'),
             name=data.get('name'),
             photo=data.get('photo'),
             size=data.get('size'),
             species=data.get('species'),
             status=data.get('status'),
-            url=data.get('url')
+            url=data.get('url'),
+            profile_id=data.get('profile_id')
         )
         print(new_saved_animal)
         print('Hello i saved?')

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e82c30c60095
+Revision ID: 8e0e93ba5a5e
 Revises: 
-Create Date: 2024-04-05 00:38:16.202954
+Create Date: 2024-04-06 03:06:23.309462
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e82c30c60095'
+revision = '8e0e93ba5a5e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +25,7 @@ def upgrade():
     sa.Column('declawed', sa.String(), nullable=True),
     sa.Column('house_trained', sa.String(), nullable=True),
     sa.Column('shots', sa.String(), nullable=True),
+    sa.Column('sex', sa.String(), nullable=True),
     sa.Column('spayed_neutered', sa.String(), nullable=True),
     sa.Column('special_needs', sa.String(), nullable=True),
     sa.Column('primary_breed', sa.String(), nullable=True),
@@ -70,10 +71,12 @@ def upgrade():
     )
     op.create_table('saved_animal_table',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('petfinder_id', sa.String(), nullable=True),
     sa.Column('age', sa.String(), nullable=True),
     sa.Column('declawed', sa.String(), nullable=True),
     sa.Column('house_trained', sa.String(), nullable=True),
     sa.Column('shots', sa.String(), nullable=True),
+    sa.Column('sex', sa.String(), nullable=True),
     sa.Column('spayed_neutered', sa.String(), nullable=True),
     sa.Column('special_needs', sa.String(), nullable=True),
     sa.Column('primary_breed', sa.String(), nullable=True),
@@ -94,7 +97,8 @@ def upgrade():
     sa.Column('url', sa.String(), nullable=True),
     sa.Column('profile_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['profile_id'], ['profile_table.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('petfinder_id')
     )
     # ### end Alembic commands ###
 
