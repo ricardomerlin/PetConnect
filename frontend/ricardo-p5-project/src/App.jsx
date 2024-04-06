@@ -93,26 +93,17 @@ function App() {
     }, []);
 
 
-    function fetchAnimals(retries = 3) {
+    function fetchAnimals() {
         console.log('I AM FETCHING AGAIN')
-        fetch(`/api/animals`)
+        fetch(`/api/animalslist`)
         .then(response => {
             if (!response.ok) { throw response }
             return response.json()
         })
         .then(data => {
             console.log('I AM FETCHING AGAIN')
-            console.log(data)
             setAnimals(data)
         })
-        .catch((error) => {
-            if (retries > 0) {
-                setTimeout(() => fetchAnimals(retries - 1), 2000);
-            } else {
-                console.error('Error:', error);
-                setFetchError(true)
-            }
-      });
     }
 
     useEffect(() => {

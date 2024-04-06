@@ -104,7 +104,12 @@ def get_animals():
 
     return jsonify(all_animals)
 
-@scheduler.task('cron', id='job', day_of_week='*', hour=0, minute=39)
+@app.get('/api/animalslist')
+def get_animals_list():
+    animals = Animal.query.all()
+    return jsonify([animal.to_dict() for animal in animals])
+
+@scheduler.task('cron', id='job', day_of_week='*', hour=13, minute=45)
 def job():
     with app.app_context():
         db.session.query(Animal).delete()

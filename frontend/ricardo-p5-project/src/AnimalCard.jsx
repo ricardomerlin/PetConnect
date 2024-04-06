@@ -14,10 +14,10 @@ function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAni
         return (
             <div key={animal.id} className='animal-card' onClick={() => handleAnimalClick(animal)}>
                 {animal.name ? <p className='animal-card-text'><strong>{animal.name}</strong></p> : null}
-                {animal.photos[0] ? (
+                {animal.photo ? (
                     <img 
-                        src={animal.photos[0]?.medium || 'default-image-url'} 
-                        alt={animal.name} 
+                        src={animal.photo?.medium || 'default-image-url'} 
+                        alt={animal.name}
                         onLoad={(e) => e.target.style.opacity = 1}
                         style={{opacity: 0, transition: 'opacity 0.5s', width: '10vw', padding: '1vw'}}
                     /> 
@@ -36,7 +36,7 @@ function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAni
                         style={{opacity: 0, transition: 'opacity 0.5s', width: '10vw', objectFit: 'contain', padding: '1vw'}}
                     />
                 ) : null}   
-                {animal.species ? <p className='animal-card-text'>{animal.gender ? animal.gender + ' ': null}{animal.species}{animal.contact.address.city && animal.contact.address.state ? ' in ' + animal.contact.address.city + ', ' + animal.contact.address.state : null}</p> : null}
+                {animal.species ? <p className='animal-card-text'>{animal.gender ? animal.gender + ' ': null}{animal.species}{animal.contact_address_city && animal.contact_address_state ? ' in ' + animal.contact_address_city + ', ' + animal.contact_address_state : null}</p> : null}
                 {animal.age ? <p className='animal-card-text'>{animal.age}</p> : ''}
                 <div>
                     {animal.breeds && (
