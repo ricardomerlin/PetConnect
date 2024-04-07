@@ -11,12 +11,23 @@ function AnimalFeed({ profile, animals }) {
     const [filterPageCount, setFilterPageCount] = useState(1);
     const [fetchError, setFetchError] = useState(false);
     const [counter, setCounter] = useState(0);
+    const [isTop, setIsTop] = useState(true);
 
     const [filterAnimals, setFilterAnimals] = useState([]);
     const [filterSubmit, setFilterSubmit] = useState(false);
 
     const [species, setSpecies] = useState('');
     const [breed, setBreed] = useState('');
+    const [age, setAge] = useState('');
+    const [size, setSize] = useState('');
+    const [goodWithCats, setGoodWithCats] = useState(false);
+    const [goodWithDogs, setGoodWithDogs] = useState(false);
+    const [goodWithChildren, setGoodWithChildren] = useState(false);
+    const [houseTrained, setHouseTrained] = useState(false);
+    const [declawed, setDeclawed] = useState(false);
+    const [spayedNeutered, setSpayedNeutered] = useState(false);
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedAnimal, setSelectedAnimal] = useState(null);
@@ -34,6 +45,17 @@ function AnimalFeed({ profile, animals }) {
             return () => clearInterval(interval);
         }
     }, [animals]);
+
+    useEffect(() => {
+        const checkScroll = () => {
+          setIsTop(window.pageYOffset === 0);
+        };
+      
+        window.addEventListener('scroll', checkScroll);
+        return () => {
+          window.removeEventListener('scroll', checkScroll);
+        };
+      }, []);
 
     useEffect(() => {
         if (modalIsOpen === true) {
@@ -56,26 +78,60 @@ function AnimalFeed({ profile, animals }) {
     }, [])
     
     useEffect(() => {
-        setFilterAnimals([])
+        setFilterAnimals([]);
         if (!filterSubmit) {
             return;
         }
-        const filteredAnimals = animals.filter(animal => animal.species.toLowerCase() === species);
-        let filteredBreed = [];
+    
+        let filteredAnimals = animals;
+    
+        // Apply species filter if selected
+        if (species !== '') {
+            filteredAnimals = filteredAnimals.filter(animal => animal.species.toLowerCase() === species);
+        }
+    
+        // Apply breed filter if selected
         if (species === 'dog' || species === 'cat') {
-            filteredBreed = filteredAnimals.filter(animal => animal.primary_breed === breed);        
-            if (filteredBreed.length > 0) {
-                setFilterAnimals(filteredBreed);
-            } else if (filteredBreed.length === 0 && breed !== '') {
-                alert('No animals of that breed were found.');
-                setFilterAnimals(filteredAnimals);
-            } else if (breed === '') {
-                setFilterAnimals(filteredAnimals);
+            if (breed !== '') {
+                filteredAnimals = filteredAnimals.filter(animal => animal.primary_breed === breed);
             }
-        } else {
-            setFilterAnimals(filteredAnimals);
-        }  
-    }, [filterSubmit, filterPageCount]);
+        }
+    
+        // Set other filters
+        if (age !== '') {
+            filteredAnimals = filteredAnimals.filter(animal => animal.age === age);
+        }
+        if (size !== '') {
+            filteredAnimals = filteredAnimals.filter(animal => animal.size === size);
+        }
+        if (goodWithCats) {
+            filteredAnimals = filteredAnimals.filter(animal => animal.good_with_cats);
+        }
+        if (goodWithDogs) {
+            filteredAnimals = filteredAnimals.filter(animal => animal.good_with_dogs);
+        }
+        if (goodWithChildren) {
+            filteredAnimals = filteredAnimals.filter(animal => animal.good_with_children);
+        }
+        if (houseTrained) {
+            filteredAnimals = filteredAnimals.filter(animal => animal.house_trained === '1');
+        }
+        if (declawed) {
+            filteredAnimals = filteredAnimals.filter(animal => animal.declawed === '1');
+        }
+        if (spayedNeutered) {
+            filteredAnimals = filteredAnimals.filter(animal => animal.spayed_neutered === '1');
+        }
+        if (city !== '') {
+            filteredAnimals = filteredAnimals.filter(animal => animal.contact_address_city.toLowerCase() === city.toLowerCase());
+        }
+        if (state !== '') {
+            filteredAnimals = filteredAnimals.filter(animal => animal.contact_address_state.toLowerCase() === state.toLowerCase());
+        }
+    
+        setFilterAnimals(filteredAnimals);
+    }, [filterSubmit, species, breed, age, size, goodWithCats, goodWithDogs, goodWithChildren, houseTrained, declawed, spayedNeutered, city, state]);
+    
 
 
     const nextPhoto = () => {
@@ -161,10 +217,10 @@ function AnimalFeed({ profile, animals }) {
                 <h1 className="page-title">Adoptable Animals</h1>
                 <h2>Welcome to our loving community of animal enthusiasts! Dive into our latest array of furry friends seeking forever homes. From playful pups to graceful felines, each profile is a tale of hope and companionship waiting to be shared. Click through and discover your next loyal companion today.</h2>
                 <div className="animal-feed-container">
-                    <div className="filters">
+                    <div className="filters" style={{opacity: isTop ? 1 : 0}}>
                     <form onSubmit={handleFilterSubmit}>
-                        <h3>Filter by:</h3>
-                        <p>Species:</p>
+                        <h2>Filter by:</h2>
+                        <span><p>Species:</p>
                         <select className='species-select' onChange={(e) => {
                             setSpecies(e.target.value);
                         }}
@@ -196,7 +252,7 @@ function AnimalFeed({ profile, animals }) {
                             <option value="snake">Snake</option>
                             <option value="sugar glider">Sugar Glider</option>
                             <option value="turtle">Turtle</option>
-                        </select>
+                        </select></span>
                         {(species === 'dog')
                         ?
                         <div>
@@ -217,7 +273,8 @@ function AnimalFeed({ profile, animals }) {
                         }
                         <div>
                             <p>Age:</p>
-                            <select className='age-select'>
+                            <select className='age-select' onChange={(e) => setAge(e.target.value)}>
+                                <option value="">Any</option>
                                 <option value="baby">Baby</option>
                                 <option value="young">Young</option>
                                 <option value="adult">Adult</option>
@@ -226,7 +283,8 @@ function AnimalFeed({ profile, animals }) {
                         </div>
                         <div>
                             <p>Size:</p>
-                            <select className='size-select'>
+                            <select className='size-select' onChange={(e) => setSize(e.target.value)}>
+                                <option value="">Any</option>
                                 <option value="small">Small</option>
                                 <option value="medium">Medium</option>
                                 <option value="large">Large</option>
@@ -235,25 +293,25 @@ function AnimalFeed({ profile, animals }) {
                         </div>
                         <div>
                             <label htmlFor="good-with-cats">Good with Cats</label>
-                            <input type="checkbox" id="good-with-cats" name="good-with-cats" value="good-with-cats"/>
+                            <input type="checkbox" id="good-with-cats" name="good-with-cats" value="good-with-cats" onChange={(e) => setGoodWithCats(e.target.checked)} />
                             <label htmlFor="good-with-dogs">Good with Dogs</label>
-                            <input type="checkbox" id="good-with-dogs" name="good-with-dogs" value="good-with-dogs"/>
+                            <input type="checkbox" id="good-with-dogs" name="good-with-dogs" value="good-with-dogs" onChange={(e) => setGoodWithDogs(e.target.checked)} />
                             <label htmlFor="good-with-children">Good with Children</label>
-                            <input type="checkbox" id="good-with-children" name="good-with-children" value="good-with-children"/>
+                            <input type="checkbox" id="good-with-children" name="good-with-children" value="good-with-children" onChange={(e) => setGoodWithChildren(e.target.checked)} />
                         </div>
                         <div>
                             <label htmlFor="house-trained">House Trained</label>
-                            <input type="checkbox" id="house-trained" name="house-trained" value="house-trained"/>
+                            <input type="checkbox" id="house-trained" name="house-trained" value="house-trained" onChange={(e) => setHouseTrained(e.target.checked)} />
                             <label htmlFor="declawed">Declawed</label>
-                            <input type="checkbox" id="declawed" name="declawed" value="declawed"/>
+                            <input type="checkbox" id="declawed" name="declawed" value="declawed" onChange={(e) => setDeclawed(e.target.checked)} />
                             <label htmlFor="spayed-neutered">Spayed/Neutered</label>
-                            <input type="checkbox" id="spayed-neutered" name="spayed-neutered" value="spayed-neutered"/>
+                            <input type="checkbox" id="spayed-neutered" name="spayed-neutered" value="spayed-neutered" onChange={(e) => setSpayedNeutered(e.target.checked)} />
                         </div>
                         <div>
                             <label htmlFor="city">City</label>
-                            <input type="text" id="city" name="city"/>
+                            <input type="text" id="city" name="city" onChange={(e) => setCity(e.target.value)} />
                             <label htmlFor="state">State</label>
-                            <input type="text" id="state" name="state"/>
+                            <input type="text" id="state" name="state" onChange={(e) => setState(e.target.value)} />
                         </div>
                         {filterSubmit ? null : <button>Search</button>}
                         {filterSubmit ?
@@ -382,25 +440,9 @@ function AnimalFeed({ profile, animals }) {
                     :
                     null}
                 </Modal>
-                <button style={{marginRight: '2px', marginBottom:'20px'}}onClick={() => {
-                    console.log(lowerIndex)
-                    if (filterSubmit === false) {
-                        setLowerIndex(lowerIndex === 0 ? 0 : lowerIndex - 99);
-                        console.log('Previous page clicked')
-                    }
-                    {(lowerIndex === 0) ? null : window.scrollTo(0, 0)}
-                }}>{'<'} Previous Page</button>
-                <button style={{marginLeft: '2px', marginBottom: '20px'}}onClick={() => {
-                    console.log(lowerIndex)
-                    if (filterSubmit === false) {
-                        setLowerIndex(((lowerIndex + 99) > filterAnimals.length) ? lowerIndex + 99 : lowerIndex);
-                        console.log('Next page clicked')
-                    }
-                    {((lowerIndex + 99) < filterAnimals.length) ?  window.scrollTo(0, 0) : null}
-                }}>Next Page {'>'}</button>
             </div>
         </>
-    )
+    );
 }
 
-export default AnimalFeed
+export default AnimalFeed;

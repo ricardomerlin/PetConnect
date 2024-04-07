@@ -12,7 +12,7 @@
 
 body::before {
   content: "";
-  opacity: 0.5;
+  opacity: 0.3;
   top: 0;
   left: 0;
   bottom: 0;
@@ -20,9 +20,11 @@ body::before {
   position: fixed;
   z-index: -1;   
   background-size: cover;
-  background-color: rgb(201, 247, 255);
+  background-color: rgb(255, 255, 255);
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-image: url('https://www.lonetreevet.com/blog/wp-content/uploads/2017/02/LoneTree_iStock-106396236.jpg');
+  background-position: center;
 }
 
 
@@ -33,27 +35,16 @@ body::before {
 .login-pic-container {
   justify-content: center;
   align-items: center;
-  /* border: 2px solid black; */
   height: 220px;
+  padding: 20px;
 }
 
 .dog-pic1, .cat-pic1 {
   border: 1px solid black;
+  height: 225px;
   background-color: #fff;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2), 0px 6px 6px rgba(0, 0, 0, 0.23);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-}
-
-.dog-pic1:hover, .cat-pic1:hover {
-  box-shadow: 0px 14px 28px rgba(0, 0, 0, 0.25), 0px 10px 10px rgba(0, 0, 0, 0.22); /* Added hover effect */
-}
-
-.dog-pic1 {
-  height: 225px;
-}
-
-.cat-pic1 {
-  height: 225px;
+  border-radius: 10px;
 }
 
 #root {
@@ -70,25 +61,26 @@ body::before {
   top: 0;
   left: 0;
   width: 100%;
-  height: 12%;
+  height: 5vw;
+  min-height:100px;
   padding: 0 20px;
-  background: linear-gradient(180deg, rgba(137, 198, 255, 1) 0%, rgba(128, 247, 255, 1) 85%, rgba(124, 141, 255, 0) 100%);
+  background: linear-gradient(180deg, #b728ff 0%, #b728ff 85%, rgba(124, 141, 255, 0) 100%);
   transition: opacity 0.5s ease;
 }
 
 .top-bar > h1 {
   font-size: 4vw;
+  color: white;
 }
 
 .page-title {
   margin-top: 9vh;
   font-size: 5vw;
-  background: linear-gradient(90deg, rgba(194, 226, 255, 0) 15%, rgb(208, 255, 254) 20%, rgb(135, 247, 255) 50%, rgb(208, 255, 254) 80%, rgba(124, 141, 255, 0) 85%);
 }
 
 .side-links {
   position: fixed;
-  background-color: #b6f2ff;
+  background-color: #b728ff;
   font-size: 1vw;
   width: 8vw;
   left: 0;
@@ -116,7 +108,7 @@ body::before {
 }
 
 .side-link:hover {
-  background-color: #6db4ff;
+  background-color: #d54aff;
   color: white;
 }
 
@@ -152,6 +144,7 @@ body::before {
   font-size: 1.3vw;
   border-radius: 10px;
   transition: transform 0.5s ease, background-color 0.3s ease;
+  color: white;
 }
 
 .link:hover {
@@ -173,15 +166,6 @@ body::before {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   background-color: #f9f9f9;
-}
-
-.species-select {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border-radius: 10px;
-  border: 1px solid #e043b9;
-  font-size:20px;
 }
 
 .login-form {
@@ -283,19 +267,18 @@ body::before {
   width: 30%;
   box-sizing: border-box;
   overflow-wrap: break-word;
-  border: 1px solid #44c7e8;
+  border: 1px solid #000000;
   border-radius: 10px;
   padding: 1rem;
   margin: 1rem;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.35);
   transition: transform 0.3s ease, background-color 0.5s ease;
-  background-color: #dbf1f6;
+  background-color: #da91ff;
 }
 
 .animal-card:hover {
-  transform: scale(1.01);  
-  background-color: rgb(166, 181, 255);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+  transform: scale(1.02);  
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.9);
 }
 
 .animal-card button {
@@ -361,6 +344,13 @@ body::before {
 
 }
 
+.card-image {
+  border-radius: 20px;
+  transition: opacity 0.5s;
+  height: 150px;
+  padding: 1vw;
+}
+
 .modal-close-button {
   position: absolute;
   top: 10px;
@@ -388,11 +378,11 @@ span {
   border-radius: 2rem;
   padding: 0.5rem 1rem;
   margin: 0.5rem;
-  animation-play-state: paused; /* Optional: Pause the animation on hover */
+  animation-play-state: paused;
 }
 
 .tag:hover {
-  animation: colorChange 1s infinite; /* Apply the animation here */
+  animation: colorChange 1s infinite;
 }
 
 .animal-feed-container {
@@ -404,21 +394,20 @@ span {
 
 .species-select {
   width: 80%;
-  padding: 0.5rem;
+  padding: 0.1rem;
   margin-bottom: 1rem;
-  border-radius: 10px;
+  border-radius: 5px;
   border: 1px solid #e043b9;
-  font-size:20px;
+  font-size:15px;
 }
 
 .filters {
   display: flex;
-  background-color: #cae7ff;
-  font-size: 15px;
+  background-color: #b728ff;
   flex-direction: column;
   align-content: center;
   height: 50vh;
-  width: 15%;
+  width: 15vw;
   border: 2px solid black;
   border-radius: 20px;
   border-color: black;
@@ -496,7 +485,7 @@ span {
   background-color: #f9f9f9;
   border-radius: 10px;
   flex: 1;
-  height: 500px; /* Set a specific height */
+  height: 500px;
 
 }
 
@@ -525,7 +514,7 @@ span {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start; /* Align items to the start of the container */
+  justify-content: flex-start;
   padding: 20px;
   margin-bottom: 20px;
   width: 80%;
@@ -552,7 +541,7 @@ span {
 
 .profile-card {
   display: flex;
-  size: 1.5vw;
+  width: 100%;
   flex-direction: column;
   justify-content: start;
   align-items: center;
@@ -564,21 +553,15 @@ span {
   overflow: auto;
 }
 
-.profile-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .remove-from-profile {
-  position: absolute; /* Set position to absolute */
-  top: 5px; /* Adjust top position */
-  right: 5px; /* Adjust right position */
-  background-color: #FF4136; /* Red background color */
-  color: white; /* White text color */
-  padding: 5px 10px; /* Padding around the button text */
-  border: none; /* Remove button border */
-  border-radius: 3px; /* Rounded corners */
-  cursor: pointer; /* Show pointer cursor on hover */
-  font-size: 12px; /* Button text size */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #FF4136;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
 }

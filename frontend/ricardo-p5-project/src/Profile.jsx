@@ -25,14 +25,16 @@ function Profile({ profile }) {
     }
 
     return (
-        <div className="profile-container">
+        <div>
             <div className='profile-card'>
                 <img className='profile-pic' src={profile.profile_picture} alt="Profile"/>
                 <h1>{profile.name}</h1>
                 <p>{profile.description}</p>
+                <div>
+                    <h2>Saved Animals:</h2>
+                    <ProfileAnimalCard animals={animals} onDelete={handleDeletedAnimal}/>
+                </div>
             </div>
-            <h2>Saved Animals:</h2>
-            <ProfileAnimalCard animals={animals} onDelete={handleDeletedAnimal}/>
         </div>
     );    
 }
