@@ -12,11 +12,14 @@ function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAni
         : []
       );
 
+      console.log(animals)
+
 
     const mappedAnimals = animalsToMap.map(animal => {
         return (
             <div key={animal.id} className='animal-card' onClick={() => handleAnimalClick(animal)}>
-                {animal.name ? <p className='animal-card-text'><strong>{animal.name}</strong></p> : null}
+                {animal.name ? <p className='animal-card-text' style={{fontSize: '20px'}}><strong>{animal.name}</strong></p> : null}
+                {}
                 {animal.photo ? (
                     <img 
                         src={animal.photo ? animal.photo : 'default-image-url'} 

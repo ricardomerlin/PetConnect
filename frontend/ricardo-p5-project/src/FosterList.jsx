@@ -238,24 +238,26 @@ function FosterList({ profile }) {
                                 </select>
                                 <br/>
                                 <br/>
-                            <button onClick={filterLocation}>Filter</button>
-                            <button onClick={getFosterListings}>Reset</button>
+                            {fosterListings.length > 0 ? <button onClick={filterLocation}>Filter</button> : <button onClick={getFosterListings}>Reset</button>}
                         </form>
                         <div className='foster-listings-container'>
                             {fosterListings.map(listing => {
                                 return (
                                     <div key={listing.id} className='foster-listing'>
-                                        <h2 style={{ color: 'darkblue', textAlign: 'center' }}><u>{listing.name}</u></h2>
-                                        <p><strong>Email:</strong> {listing.email_address}</p>
-                                        <p><strong>Location:</strong> {listing.city}, {listing.state}</p>
-                                        <p><strong>About:</strong> {listing.description}</p>
-                                        <p style={{ color: 'darkgreen' }}>Interested in fostering <strong>{listing.preference}s</strong></p>
+                                        <h2 style={{ color: 'purple', textAlign: 'center', fontSize: '20px', marginBottom: '0' }}><u>{listing.name}</u></h2>
+                                        <p style={{fontSize: '15px', marginTop: '0'}}><strong>Wants to foster:</strong> {listing.preference}s</p>
+                                        <p style={{margin: '3px'}}><strong>Email:</strong> {listing.email_address}</p>
+                                        <p style={{margin: '3px'}}><strong>Location:</strong> {listing.city}, {listing.state}</p>
+                                        <p style={{marginTop: '3px', marginBottom: '5px'}}><strong>About:</strong> {listing.description}</p>
                                         {listing.profile_id === profile.id && (
-                                            <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => {
-                                                deleteListing(listing.id)
-                                                setListingExists(false)
-                                            }
-                                            }>Delete</button>
+                                            <div>
+                                                <p style={{marginBottom: '0'}}>No longer available?</p>
+                                                <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => {
+                                                    deleteListing(listing.id)
+                                                    setListingExists(false)
+                                                }
+                                                }>Remove your listing</button>
+                                            </div>
                                         )}
                                     </div>
                                 )

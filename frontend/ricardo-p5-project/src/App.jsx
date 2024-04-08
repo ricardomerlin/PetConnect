@@ -137,10 +137,10 @@ function App() {
               null
               }
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', padding: '3vw' }}>
-                <p>Welcome, {profile.name}!</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', padding: '3vw' }} className='logout-container'>
+                <p style={{marginBottom: '0', marginTop: '0'}}>Welcome, {profile.name}!</p>
                 {profile.profile_picture ? <img src={profile.profile_picture} alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '20px', padding: '4px' }} /> : null}
-                <button onClick={handleLogout}>Logout</button>
+                <a onClick={handleLogout} className='logout'>Logout</a>
               </div>
             </nav>
           <Routes>

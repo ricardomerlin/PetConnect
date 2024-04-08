@@ -24,17 +24,21 @@ function Profile({ profile }) {
         setAnimals(animals.filter(animal => animal.id !== deletedAnimal.id));
     }
 
+    const reformattedDate = new Date(profile.birthday).toLocaleDateString();
+
+    console.log(reformattedDate)
+
     return (
-        <div>
-            <div className='profile-card'>
-                <img className='profile-pic' src={profile.profile_picture} alt="Profile"/>
+        <div className='profile-card'>
+            <div className='profile-top-bar'></div>
+            <img className='profile-pic' src={profile.profile_picture} alt="Profile"/>
+            <div className='profile-information'>
                 <h1>{profile.name}</h1>
-                <p>{profile.description}</p>
-                <div>
-                    <h2>Saved Animals:</h2>
-                    <ProfileAnimalCard animals={animals} onDelete={handleDeletedAnimal}/>
-                </div>
-            </div>
+                <h2>Birthday: {reformattedDate}</h2>
+                <h3>{profile.description}</h3>
+            </div>    
+            <h2 style={{marginBottom: '0'}}><u>Saved Animals:</u></h2>
+            <ProfileAnimalCard animals={animals} onDelete={handleDeletedAnimal}/>
         </div>
     );    
 }

@@ -65,7 +65,7 @@ def get_animals():
     access_token = token_response.json().get('access_token')
 
     all_animals = []
-    for pageNumber in range(1, 2):
+    for pageNumber in range(1, 501):
         animals_response = requests.get(f'https://api.petfinder.com/v2/animals?limit=100&page={pageNumber}', headers={
             'Authorization': f'Bearer {access_token}',
         })
@@ -110,7 +110,7 @@ def get_animals_list():
     animals = Animal.query.all()
     return jsonify([animal.to_dict() for animal in animals])
 
-@scheduler.task('cron', id='job', day_of_week='*', hour=3, minute=7)
+@scheduler.task('cron', id='job', day_of_week='*', hour=16, minute=3)
 def job():
     with app.app_context():
         db.session.query(Animal).delete()

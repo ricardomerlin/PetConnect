@@ -35,6 +35,8 @@ function AnimalFeed({ profile, animals }) {
 
 
     const [lowerIndex, setLowerIndex] = useState(0);
+    const [itemsPerPage] = useState(100);
+
 
     useEffect(() => {
         if (animals.length === 0) {
@@ -66,11 +68,6 @@ function AnimalFeed({ profile, animals }) {
         }
     }, [modalIsOpen])
 
-    // useEffect (() => {
-    //     setFetchError(false)
-    //     getSavedAnimals()
-    // }, [])
-    
     useEffect(() => {
         setFilterAnimals([]);
         if (!filterSubmit) {
@@ -188,10 +185,6 @@ function AnimalFeed({ profile, animals }) {
         setFilterSubmit(true)
     }
 
-    // const checkAddedToProfile = (animal) => {
-
-
-
     console.log(profile.animals)
     console.log(filterAnimals)
     console.log(species)
@@ -201,11 +194,27 @@ function AnimalFeed({ profile, animals }) {
         setBreed(breed);
     }
 
+    const handleNextPage = () => {
+        setLowerIndex(prevIndex => {
+            window.scrollTo(0, 0);
+            return prevIndex + itemsPerPage;
+        });
+    };
+    
+    const handlePreviousPage = () => {
+        setLowerIndex(prevIndex => {
+            window.scrollTo(0, 0);
+            return Math.max(prevIndex - itemsPerPage, 0);
+        });
+    };
+    
+    
+
     return (
         <>
             <div className="main-page">
             <h1 className="page-title">Adoptable Animals</h1>
-            <h2>Welcome to our loving community of animal enthusiasts! Dive into our latest array of furry friends seeking forever homes. From playful pups to graceful felines, each profile is a tale of hope and companionship waiting to be shared. Click through and discover your next loyal companion today.</h2>
+            <h2 style={{marginRight: '10vw', marginLeft: '10vw'}}>Welcome to our loving community of animal enthusiasts! Dive into our latest array of furry friends seeking forever homes. From playful pups to graceful felines, each profile is a tale of hope and companionship waiting to be shared. Click through and discover your next loyal companion today.</h2>
             <div className="animal-feed-container">
             <div className="filters" style={{ opacity: isTop ? 1 : 0, height: species ? '580px' : '525px' }}>
                     <form onSubmit={handleFilterSubmit}>
@@ -407,6 +416,10 @@ function AnimalFeed({ profile, animals }) {
                 />
                 }
                 </div>
+                <div className="pagination-buttons">
+                    <button onClick={handlePreviousPage} disabled={lowerIndex === 0} className="previous-button">Previous Page</button>
+                    <button onClick={handleNextPage} disabled={lowerIndex + itemsPerPage >= animals.length} className="next-button">Next Page</button>
+                </div>
                 <Modal
                     appElement={document.getElementById('root')}
                     isOpen={modalIsOpen}
@@ -428,7 +441,7 @@ function AnimalFeed({ profile, animals }) {
                     <div className="modal-container-with-name">
                     <h1 style={{marginBottom:'0'}}>{selectedAnimal.name}</h1>
                     <h2><strong>{selectedAnimal.age} {selectedAnimal.sex} {selectedAnimal.primary_breed}</strong></h2>
-                    {selectedAnimal.status ? <p><strong>Available!</strong></p> : <p><strong>Unavailable</strong></p>}
+                    {selectedAnimal.status ? <p style={{color: 'green', fontSize: '15px'}}><strong>Available!</strong></p> : <p style={{color: 'red', fontSize: '15px'}}><strong>Unavailable</strong></p>}
                     <div className="modal-container">
                         <div className='modal-animal-left'>
                             <p className='animal-card-text'>
@@ -464,18 +477,19 @@ function AnimalFeed({ profile, animals }) {
                                     }
                                     alt={selectedAnimal.name} 
                                     onLoad={(e) => e.target.style.opacity = 1}
-                                    style={{opacity: 0, transition: 'opacity 0.5s', height: '300px', marginBottom: '30px'}}
+                                    style={{opacity: 0, transition: 'opacity 0.5s', height: '300px', marginBottom: '30px', borderRadius: '20px'}}
                                 />
                             <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <div className="left-card">
                                 {selectedAnimal.primary_color ? <p><u><strong>Color:</strong></u> {selectedAnimal.primary_color}</p> : null}
-                                <p><u><strong>Size:</strong></u> {selectedAnimal.size}</p>
-                            </div>
-                            <div className="right-card">
-                                {(selectedAnimal.species.toLowerCase() === 'cat') ? <p><u><strong>Declawed:</strong></u>{selectedAnimal.declawed === '1' ? ' Yes' : ' No'}</p> : null}                                
+                                <p><u><strong>{(selectedAnimal.sex.toLowerCase() === 'male') ? 'Neutered?' : 'Spayed?'}</strong></u>{selectedAnimal.spayed_neutered === '1' ? ' Yes' : ' No'}</p>
                                 <p><u><strong>House trained?</strong></u>{selectedAnimal.house_trained === '1' ? ' Yes' : ' No'}</p>                            
                                 <p><u><strong>Up to date on shots?</strong></u>{selectedAnimal.shots === '0' ? ' Yes' : ' No'}</p>
-                                <p><u><strong>{(selectedAnimal.sex.toLowerCase() === 'male') ? 'Neutered?' : 'Spayed?'}</strong></u>{selectedAnimal.spayed_neutered === '1' ? ' Yes' : ' No'}</p>
+                            </div>
+                            <div className="right-card">
+                                <p><u><strong>Size:</strong></u> {selectedAnimal.size}</p>
+                                <p><u><strong>Special needs:</strong></u>{selectedAnimal.special_needs === '1' ? ' Yes' : ' No'}</p>
+                                {(selectedAnimal.species.toLowerCase() === 'cat') ? <p><u><strong>Declawed:</strong></u>{selectedAnimal.declawed === '1' ? ' Yes' : ' No'}</p> : null}                                
                             </div>
                             </div>
                         </div>
@@ -486,9 +500,9 @@ function AnimalFeed({ profile, animals }) {
                                 <span className="environment-condition">{selectedAnimal.good_with_children ? "✔️ Good with children." : "ⅹ Not good with children."}</span>
                             </p>
                             {selectedAnimal.contact_address || selectedAnimal.contact_email || selectedAnimal.contact_phone ? 
-                            <p className="contact-information"><strong>Contact Information:</strong>
+                            <p className="contact-information" style={{margin: '10px'}}><strong>Contact Information:</strong>
                                 {selectedAnimal.contact_address_city || selectedAnimal.contact_address_state ? 
-                                    <span className="contact-text">
+                                <span className="contact-text">
                                     <strong>Location: </strong>{selectedAnimal.contact_address_city}, {selectedAnimal.contact_address_state}                                       
                                     </span> 
                                 : null}                                
@@ -507,14 +521,13 @@ function AnimalFeed({ profile, animals }) {
                             </p>
                             :
                             null}
-                        <h5 className='animal-card-text'>Interested in {selectedAnimal.name}? <a href={selectedAnimal.url} target="_blank" rel="noopener noreferrer">Submit an Inquiry here.</a></h5>
-                        <h4 className='animal-card-text'>Want to save {selectedAnimal.name}'s information for later?</h4>
                         <button className='modal-close-button' onClick={() => {
                             setModalIsOpen(false)
                             setSelectedAnimal(null)
                         }}>X</button>
                     </div>
                     </div>
+                    <h5 className='animal-card-text'>Interested in {selectedAnimal.name}? Submit an inquiry <a href={selectedAnimal.url} target="_blank" rel="noopener noreferrer">here</a>, or save {selectedAnimal.name}'s information for later.</h5>
                     <button className='add-adopt-button' onClick={() => handleAdoptionConsideration(selectedAnimal)}>Add {selectedAnimal.name}'s<><br /> information to your profile.</></button>
                     </div>
                     :

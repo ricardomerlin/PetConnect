@@ -7,12 +7,15 @@
 
 .App {
   width: 100%;
-  padding-top: 40px;
+  padding-top: 125px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 body::before {
   content: "";
-  opacity: 0.3;
+  opacity: 0.1;
   top: 0;
   left: 0;
   bottom: 0;
@@ -74,8 +77,8 @@ body::before {
 }
 
 .page-title {
-  margin-top: 9vh;
-  font-size: 5vw;
+  margin-top: 18px;
+  font-size: 4vw;
 }
 
 .side-links {
@@ -112,18 +115,19 @@ body::before {
   color: white;
 }
 
-.logout {
+.logout-container {
   display: flex;
-  font-size: 1vw;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  align-self: flex-end;
-  padding: 0;
 }
 
-.logout button {
-  margin-bottom: 10px;
+.logout {
+  color: white;
+}
+
+.logout:hover {
+  cursor:pointer;
+  color: white;
+  text-decoration: underline;
 }
 
 .links {
@@ -220,7 +224,7 @@ body::before {
   border: 1px solid #ccc;
   padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
+  background-color: #ecc8ff;
   border-radius: 10px;
 }
 
@@ -242,17 +246,34 @@ body::before {
   border: 1px solid #ccc;
 }
 
-.create-profile-submit, .create-profile-back {
+.create-profile-button-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.create-profile-submit {
   padding: 10px 20px;
   border-radius: 5px;
   border: none;
-  background-color: #007BFF;
+  width: 30%;
+  background-color: #cb48ff;
   color: white;
   cursor: pointer;
 }
 
+.create-profile-submit:hover {
+  background-color: #b41fff;
+}
+
 .create-profile-back {
-  background-color: #6c757d;
+  background-color: #7b7b7b;
+  color: white;
+}
+
+.create-profile-back:hover {
+  background-color: #a9abac;
 }
 
 .animal-card-container {
@@ -272,7 +293,8 @@ body::before {
   padding: 1rem;
   margin: 1rem;
   transition: transform 0.3s ease, background-color 0.5s ease;
-  background-color: #ecc6ff;
+  background-color: #f7e6ff;
+  cursor: pointer;
 }
 
 .animal-card:hover {
@@ -281,33 +303,13 @@ body::before {
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.9);
 }
 
-.animal-card button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #007BFF;
-  font-size: 1vw;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.3s ease;
-}
-
-.animal-card button:hover {
-  background-color: #0056b3;
-}
-
 .animal-card-text {
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  padding-top: 20px;
   margin: 6px;
-  font-size: 20px;
+  font-size: 15px;
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
 
@@ -332,6 +334,10 @@ body::before {
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+.contact-text {
+  margin: 5px;
+}
+
 .email-address {
   margin-left: 60px;
 }
@@ -354,10 +360,11 @@ body::before {
 }
 
 .card-image {
-  border-radius: 20px;
   transition: opacity 0.5s;
   height: 13vw;
-  padding: 1vw;
+  max-width: 80%;
+  margin: 1vw;
+  border-radius: 30px;
 }
 
 .modal-close-button {
@@ -517,7 +524,7 @@ span {
   border-radius: 5px;
   height: 50px;
   font-size: 15px;
-  margin-top: 50px;
+  margin-top: 10px;
 }
 
 .add-adopt-button:hover {
@@ -560,36 +567,14 @@ span {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ccc;
+  font-size: 15px;
+  border: 5px solid #8c6197;
+  border-radius: 20px;
   padding-bottom: 15px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  background-color: #b3e9ff;
+  background-color: #f8e5ff;
   border-radius: 10prgb(251, 167, 255);
   margin: 20px;
-}
-
-.animal-profile-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  padding: 20px;
-  margin-bottom: 20px;
-  width: 80%;
-}
-
-.profile-animal-card {
-  position: relative;
-  width: 300px;
-  border: 1px solid #ccc; 
-  padding: 10px;
-}
-
-.profile-pic {
-  width: 200px;
-  max-width: 100%;
-  border-radius: 10px;
-  border: 3px solid #1f1f1f;
 }
 
 .small-profile-pic {
@@ -597,29 +582,126 @@ span {
   padding-bottom: 5px;
 }
 
-.profile-card {
-  display: flex;
+.profile-top-bar {
   width: 100%;
+  height: 180px;
+  background-color: rgb(228, 161, 255);
+  position: relative;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+}
+
+.profile-card {
+  margin-bottom: 50px;
+  width: 130vh;
+  display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  margin-top: 12vw;
-  padding: 30px;
-  border-radius: 10px;
-  animation: colorChange 15s infinite;
+  border-radius: 20px;
   border: 2px solid black;
-  overflow: auto;
+  align-items: center;
+  background-color: rgb(252, 246, 255);  
+  background-image: url("https://www.transparenttextures.com/patterns/absurdity.png");
+}
+
+
+.profile-pic {
+  height: 300px;
+  border-radius: 300px;
+  border: 3px solid #1f1f1f;
+  position: absolute;
+  margin-top: 30px;
+}
+
+.profile-information {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 175px;
+}
+
+.profile-animal-card {
+  position: relative;
+  width: 20%;
+  margin: 10px;
+  border: 1px solid #ccc; 
+  padding: 10px;
+  border-radius: 30px;
+  background-color: white;
+}
+
+
+.animal-profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 90%;
 }
 
 .remove-from-profile {
   position: absolute;
   top: 5px;
-  right: 5px;
+  left: 10px;
   background-color: #FF4136;
   color: white;
   padding: 5px 10px;
   border: none;
-  border-radius: 3px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 12px;
+}
+
+.delete-confirmation-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.delete-confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1000;
+}
+
+.delete-confirmation-content {
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.confirm-button, .cancel-button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirm-button {
+  background-color: #007BFF;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.pagination-buttons {
+  margin-bottom: 20px;
 }

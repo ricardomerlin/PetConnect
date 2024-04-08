@@ -7,7 +7,7 @@ function CreateProfile({ handleLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [birthday, setBirthday] = useState('');
-    const [profilePicture, setProfilePicture] = useState('');
+    const [profilePicture, setProfilePicture] = useState(null);
     const [description, setDescription] = useState('');
     const [loggingIn, setLoggingIn] = useState(false)
 
@@ -61,7 +61,8 @@ function CreateProfile({ handleLogin }) {
     return (
         <div className="create-profile-container">
             <h1>Create Profile</h1>
-            <img     style={{
+            <img     
+            style={{
                             height: '20vh', 
                             margin: '0', 
                             borderRadius:`50%`,
@@ -85,14 +86,24 @@ function CreateProfile({ handleLogin }) {
                     <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required />
                 </label>
                 <label>
-                    Profile Picture URL:
-                    <input type="text" value={profilePicture} onChange={(e) => setProfilePicture(e.target.value)} required />
+                    Profile Picture:
+                    <input type="file" accept="image/*" onChange={(e) => setProfilePicture(e.target.files[0])} required />
                 </label>
+                {profilePicture ? 
+                <img
+                src={profilePicture}
+                className="create-profile-image"
+                />
+                :
+                null
+                }
                 <label>
-                    Tell us about yourself and your love for animals. What are you looking for in a companion?
-                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+                    Tell us about yourself and your love for animals. What are you looking for in a pet?
                 </label>
-                <button type="submit" className="create-profile-submit">Create Profile</button>
+                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} style={{width: '50%', alignSelf: 'center'}} required />
+                <div className='create-profile-button-container'>
+                    <button type="submit" className="create-profile-submit">Create Profile</button>
+                </div>
             </form>
             <button onClick={() => {
                 console.log('Loggin in from new profile');
