@@ -2,8 +2,8 @@
 function CatBreedFilter({ handleBreedSelection }) {
 
   return (
-    <select style={{borderRadius:'40px'}} onChange={(e) => handleBreedSelection(e.target.value)}>
-        <option value="">Select a breed</option>
+    <select className='breed-select' onChange={(e) => handleBreedSelection(e.target.value)}>
+        <option value="">Breed...</option>
         <option value="Abyssinian">Abyssinian</option>
         <option value="American Bobtail">American Bobtail</option>
         <option value="American Curl">American Curl</option>

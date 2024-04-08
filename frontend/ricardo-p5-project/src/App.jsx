@@ -94,14 +94,12 @@ function App() {
 
 
     function fetchAnimals() {
-        console.log('I AM FETCHING AGAIN')
         fetch(`/api/animalslist`)
         .then(response => {
             if (!response.ok) { throw response }
             return response.json()
         })
         .then(data => {
-            console.log('I AM FETCHING AGAIN')
             setAnimals(data)
         })
     }
@@ -141,12 +139,12 @@ function App() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', padding: '3vw' }}>
                 <p>Welcome, {profile.name}!</p>
-                {profile.profile_picture ? <img src={profile.profile_picture} alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '50%', padding: '4px' }} /> : null}
+                {profile.profile_picture ? <img src={profile.profile_picture} alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '20px', padding: '4px' }} /> : null}
                 <button onClick={handleLogout}>Logout</button>
               </div>
             </nav>
           <Routes>
-            <Route path="/" element={<AnimalFeed animals={animals} profile={profile}/>} />
+            <Route path="/" element={<AnimalFeed animals={animals} profile={profile} />} />
             <Route path="/profile" element={<Profile animals={animals} profile={profile}/>} />
             <Route path="/foster" element={<FosterList animals={animals} profile={profile}/>} />
           </Routes>

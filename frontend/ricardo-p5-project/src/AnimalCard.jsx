@@ -1,5 +1,7 @@
-function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAnimals}) {
-    
+import { useEffect } from "react";
+
+function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAnimals }) {
+
     const animalsToMap = filterAnimals 
     ? (Array.isArray(filterAnimals) 
         ? filterAnimals.slice(lowerIndex, lowerIndex + 99) 
@@ -9,6 +11,7 @@ function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAni
         ? animals.slice(lowerIndex, lowerIndex + 99) 
         : []
       );
+
 
     const mappedAnimals = animalsToMap.map(animal => {
         return (
@@ -49,7 +52,7 @@ function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAni
                         animal.species.toLowerCase() === 'snake' ? 'https://png.pngtree.com/png-clipart/20230413/original/pngtree-cartoon-snake-green-png-image_9051656.png' :
                         animal.species.toLowerCase() === 'sugar glider' ? 'https://aaah0mnbncqtinas.public.blob.vercel-storage.com/2jHo3agFnx-no-background-6bCUiwZyWSWtgO6H2B8E0WZQ8ERume.png' :
                         animal.species.toLowerCase() === 'turtle' ? 'https://freepngimg.com/thumb/cute/29798-8-cute-turtle-image.png' :
-                        'default_image_url'
+                        'https://upload.wikimedia.org/wikipedia/commons/1/1e/Heart-SG2001-transparent.png'
                     }
                     alt={animal.name} 
                     onLoad={(e) => e.target.style.opacity = 1}
