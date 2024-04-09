@@ -12,7 +12,6 @@ function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAni
         : []
       );
 
-      console.log(animals)
 
 
     const mappedAnimals = animalsToMap.map(animal => {

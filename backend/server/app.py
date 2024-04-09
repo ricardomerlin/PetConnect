@@ -111,7 +111,7 @@ def get_animals_list():
     animals = Animal.query.all()
     return jsonify([animal.to_dict() for animal in animals])
 
-@scheduler.task('cron', id='job', day_of_week='*', hour=21, minute=32)
+@scheduler.task('cron', id='job', day_of_week='*', hour=2, minute=33)
 def job():
     with app.app_context():
         db.session.query(Animal).delete()
@@ -165,6 +165,7 @@ def save_animal():
         print('Getting ready for new saved animal')
         new_saved_animal = Saved_Animal(
             id=data.get('id'),
+            petfinder_id=data.get('petfinder_id'),
             age=data.get('age'),
             declawed=data.get('declawed'),
             house_trained = data.get('house_trained'),                

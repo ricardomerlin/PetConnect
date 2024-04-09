@@ -13,6 +13,7 @@ function AnimalFeed({ profile, animals }) {
     const [counter, setCounter] = useState(0);
     const [isTop, setIsTop] = useState(true);
     const [savedAnimals, setSavedAnimals] = useState([]);
+    const [saved, setSaved] = useState(false);
 
     const [filterAnimals, setFilterAnimals] = useState([]);
     const [filterSubmit, setFilterSubmit] = useState(false);
@@ -46,6 +47,13 @@ function AnimalFeed({ profile, animals }) {
             return () => clearInterval(interval);
         }
     }, [animals]);
+
+    useEffect(() => {
+        if (selectedAnimal) {
+            checkSavedAnimal(selectedAnimal);
+        }
+        getSavedAnimals();
+    }, [modalIsOpen]);
 
     useEffect(() => {
         setFetchError(false)
@@ -173,7 +181,7 @@ function AnimalFeed({ profile, animals }) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+            setSaved(true);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -207,9 +215,23 @@ function AnimalFeed({ profile, animals }) {
             return Math.max(prevIndex - itemsPerPage, 0);
         });
     };
-    
-    
 
+    console.log(savedAnimals)
+    
+    const checkSavedAnimal = (animal) => {
+        console.log('check saved animal is running');
+        let isSaved = false;
+        for (let i = 0; i < savedAnimals.length; i++) {
+            if (animal.petfinder_id === savedAnimals[i].petfinder_id) {
+                console.log('some shit matched');
+                isSaved = true;
+                break;
+            }
+        }
+        setSaved(isSaved);
+    };
+    
+    
     return (
         <>
             <div className="main-page">
@@ -477,18 +499,18 @@ function AnimalFeed({ profile, animals }) {
                                     }
                                     alt={selectedAnimal.name} 
                                     onLoad={(e) => e.target.style.opacity = 1}
-                                    style={{opacity: 0, transition: 'opacity 0.5s', height: '300px', marginBottom: '30px', borderRadius: '20px'}}
+                                    style={{opacity: 0, transition: 'opacity 0.5s', height: '350px', marginBottom: '30px', borderRadius: '20px', maxWidth: '400px'}}
                                 />
                             <div style={{display: 'flex', justifyContent: 'space-between'}}>
                             <div className="left-card">
-                                {selectedAnimal.primary_color ? <p><u><strong>Color:</strong></u> {selectedAnimal.primary_color}</p> : null}
-                                <p><u><strong>{(selectedAnimal.sex.toLowerCase() === 'male') ? 'Neutered?' : 'Spayed?'}</strong></u>{selectedAnimal.spayed_neutered === '1' ? ' Yes' : ' No'}</p>
-                                <p><u><strong>House trained?</strong></u>{selectedAnimal.house_trained === '1' ? ' Yes' : ' No'}</p>                            
-                                <p><u><strong>Up to date on shots?</strong></u>{selectedAnimal.shots === '0' ? ' Yes' : ' No'}</p>
+                                {selectedAnimal.primary_color ? <p><u><strong>Color:</strong></u><br />{selectedAnimal.primary_color}</p> : null}
+                                <p><u><strong>{(selectedAnimal.sex.toLowerCase() === 'male') ? 'Neutered?' : 'Spayed?'}</strong></u><br />{selectedAnimal.spayed_neutered === '1' ? ' Yes' : ' No'}</p>
+                                <p><u><strong>House trained?</strong></u><br />{selectedAnimal.house_trained === '1' ? ' Yes' : ' No'}</p>                            
                             </div>
                             <div className="right-card">
-                                <p><u><strong>Size:</strong></u> {selectedAnimal.size}</p>
-                                <p><u><strong>Special needs:</strong></u>{selectedAnimal.special_needs === '1' ? ' Yes' : ' No'}</p>
+                                <p><u><strong>Up to date on shots?</strong></u><br />{selectedAnimal.shots === '0' ? ' Yes' : ' No'}</p>
+                                <p><u><strong>Size:</strong></u> <br /> {selectedAnimal.size}</p>
+                                <p><u><strong>Special needs:</strong></u><br />{selectedAnimal.special_needs === '1' ? ' Yes' : ' No'}</p>
                                 {(selectedAnimal.species.toLowerCase() === 'cat') ? <p><u><strong>Declawed:</strong></u>{selectedAnimal.declawed === '1' ? ' Yes' : ' No'}</p> : null}                                
                             </div>
                             </div>
@@ -528,7 +550,7 @@ function AnimalFeed({ profile, animals }) {
                     </div>
                     </div>
                     <h5 className='animal-card-text'>Interested in {selectedAnimal.name}? Submit an inquiry <a href={selectedAnimal.url} target="_blank" rel="noopener noreferrer">here</a>, or save {selectedAnimal.name}'s information for later.</h5>
-                    <button className='add-adopt-button' onClick={() => handleAdoptionConsideration(selectedAnimal)}>Add {selectedAnimal.name}'s<><br /> information to your profile.</></button>
+                    {saved ? <h3 style={{marginTop: '40px'}}>{selectedAnimal.name} has been saved to your profile!</h3> : <button className='add-adopt-button' onClick={() => handleAdoptionConsideration(selectedAnimal)}>Add {selectedAnimal.name}'s<><br /> information to your profile.</></button> }
                     </div>
                     :
                     null}
