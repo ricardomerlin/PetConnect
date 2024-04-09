@@ -13,39 +13,36 @@ function CreateProfile({ handleLogin }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-
+    
         const birthDate = new Date(birthday);
         const today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
         const m = today.getMonth() - birthDate.getMonth();
-
+    
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+            age--;
         }
-
+    
         if (age < 18) {
-        alert('You must be at least 18 years old.');
-        return;
+            alert('You must be at least 18 years old.');
+            return;
         }
-
+    
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('username', username);
+        formData.append('password', password);
+        formData.append('birthday', birthday);
+        formData.append('profile_picture', profilePicture);
+        formData.append('description', description);
+    
         const response = await fetch('api/profiles', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name,
-                username,
-                password,
-                birthday,
-                profile_picture: profilePicture,
-                description,
-            }),
+            body: formData,
         });
-
+    
         const data = await response.json();
-
+    
         if (response.ok) {
             console.log('Profile saved successfully:', data);
             handleLogin(username, password);

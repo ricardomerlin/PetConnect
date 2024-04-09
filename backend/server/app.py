@@ -8,6 +8,7 @@ from models import db, Profile, Saved_Animal, Foster_listing, Animal
 from datetime import datetime
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
+from base64 import b64encode
 
 import requests
 import os
@@ -110,7 +111,7 @@ def get_animals_list():
     animals = Animal.query.all()
     return jsonify([animal.to_dict() for animal in animals])
 
-@scheduler.task('cron', id='job', day_of_week='*', hour=16, minute=3)
+@scheduler.task('cron', id='job', day_of_week='*', hour=21, minute=32)
 def job():
     with app.app_context():
         db.session.query(Animal).delete()
@@ -202,20 +203,27 @@ def save_animal():
 @app.post('/api/profiles')
 def save_profile():
     try:
-        data = request.get_json()
+        name = request.form.get('name')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        birthday = datetime.strptime(request.form.get('birthday'), '%Y-%m-%d').date()
+        description = request.form.get('description')
 
-        existing_profile = Profile.query.filter_by(username=data['username']).first()
-
+        existing_profile = Profile.query.filter_by(username=username).first()
         if existing_profile:
             return {'error': 'Profile with this username already exists'}, 400
 
+        profile_picture = request.files.get('profile_picture')
+
+        profile_picture_data = b64encode(profile_picture.read()).decode('utf-8')
+
         new_profile = Profile(
-            name=data['name'],
-            username=data['username'],
-            password=bcrypt.generate_password_hash(data['password']),
-            birthday=datetime.strptime(data['birthday'], '%Y-%m-%d').date(),
-            profile_picture=data['profile_picture'],
-            description=data['description']
+            name=name,
+            username=username,
+            password=bcrypt.generate_password_hash(password),
+            birthday=birthday,
+            profile_picture=profile_picture_data,
+            description=description
         )
 
         db.session.add(new_profile)

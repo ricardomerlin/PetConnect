@@ -31,7 +31,7 @@ function Profile({ profile }) {
     return (
         <div className='profile-card'>
             <div className='profile-top-bar'></div>
-            <img className='profile-pic' src={profile.profile_picture} alt="Profile"/>
+            <img className='profile-pic' src={`data:image/jpeg;base64,${profile.profile_picture}`} alt="Profile"/>
             <div className='profile-information'>
                 <h1>{profile.name}</h1>
                 <h2>Birthday: {reformattedDate}</h2>
