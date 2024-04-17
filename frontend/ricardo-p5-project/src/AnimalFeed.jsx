@@ -4,12 +4,11 @@ import DogBreedFilter from "./DogBreedFilter";
 import CatBreedFilter from "./CatBreedFilter";
 import Modal from 'react-modal';
 import './App.css'
+import StateList from "./statelist";
 
 Modal.setAppElement('#root')
 
 function AnimalFeed({ profile, animals }) {
-    const [filterPageCount, setFilterPageCount] = useState(1);
-    const [fetchError, setFetchError] = useState(false);
     const [counter, setCounter] = useState(0);
     const [isTop, setIsTop] = useState(true);
     const [savedAnimals, setSavedAnimals] = useState([]);
@@ -56,7 +55,6 @@ function AnimalFeed({ profile, animals }) {
     }, [modalIsOpen]);
 
     useEffect(() => {
-        setFetchError(false)
         getSavedAnimals()
         const checkScroll = () => {
           setIsTop(window.pageYOffset === 0);
@@ -240,7 +238,7 @@ function AnimalFeed({ profile, animals }) {
             <div className="animal-feed-container">
             <div className="filters" style={{ opacity: isTop ? 1 : 0, height: species ? '580px' : '525px' }}>
                     <form onSubmit={handleFilterSubmit}>
-                        <h2>Filter by:</h2>
+                        <h2 style={{marginBottom: '0'}}>Filter by:</h2>
                         <div className="filter-group">
                             <div>
                                 <p>Species:</p>
@@ -383,8 +381,8 @@ function AnimalFeed({ profile, animals }) {
                             </div>
                         </div>
                         <div className="filter-group">
-                            <div>
-                                <label htmlFor="city">City</label>
+                            <div style={{display:'flex', justifyContent:'center'}}>
+                                <label htmlFor="city" style={{borderRadius: '10px'}}>City</label>
                                 <input
                                     type="text"
                                     id="city"
@@ -392,14 +390,16 @@ function AnimalFeed({ profile, animals }) {
                                     onChange={(e) => setCity(e.target.value)}
                                 />
                             </div>
-                            <div>
+                            <div style={{display:'flex', justifyContent:'center', marginTop: '10px'}}>
                                 <label htmlFor="state">State</label>
-                                <input
+                                <select
                                     type="text"
                                     id="state"
                                     name="state"
                                     onChange={(e) => setState(e.target.value)}
-                                />
+                                >
+                                    <StateList />
+                                </select>
                             </div>
                         </div>
                         <div className="filter-buttons">

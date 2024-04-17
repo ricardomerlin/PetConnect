@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CreateProfile from './CreateProfile';
 import DogPics from './DogPics';
-import CatPics from './CatPics';
 
 function Login({ handleLogin }) {
     const [username, setUsername] = useState('');
@@ -34,7 +33,9 @@ function Login({ handleLogin }) {
                 <button type="submit" className="login-submit">Login</button>
             </form>
             <button onClick={() => setCreatingProfile(true)} className="login-create">Create Profile</button>
-            <CatPics />
+            <div className='login-pic-container'>
+                <img className='cat-pic1' src={'https://media.npr.org/assets/img/2021/08/11/gettyimages-1279899488_wide-f3860ceb0ef19643c335cb34df3fa1de166e2761-s1400-c100.jpg'} alt="Cat" />
+            </div>
         </div>
     );
 }
