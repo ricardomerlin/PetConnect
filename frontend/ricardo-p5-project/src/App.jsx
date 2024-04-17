@@ -139,7 +139,7 @@ function App() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyItems: 'center', padding: '3vw' }} className='logout-container'>
                 <p style={{marginBottom: '0', marginTop: '0'}}>Welcome, {profile.name}!</p>
-                {profile.profile_picture ? <img src={`data:image/jpeg;base64,${profile.profile_picture}`} alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '20px', padding: '4px' }} /> : null}
+                {profile.profile_picture ? <img src={`data:image/jpeg;base64,${profile.profile_picture}`} alt="Profile" style={{ height: '50px', borderRadius: '20px', padding: '4px' }} /> : null}
                 <a onClick={handleLogout} className='logout'>Logout</a>
               </div>
             </nav>

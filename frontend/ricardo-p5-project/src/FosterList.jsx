@@ -251,12 +251,12 @@ function FosterList({ profile }) {
                                         <p style={{marginTop: '3px', marginBottom: '5px'}}><strong>About:</strong> {listing.description}</p>
                                         {listing.profile_id === profile.id && (
                                             <div>
-                                                <p style={{marginBottom: '0'}}>No longer available?</p>
-                                                <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => {
+                                                <p style={{marginBottom: '0px', marginTop: '20px'}}>No longer available?</p>
+                                                <a href='#' style={{ color: 'red' }} onClick={() => {
                                                     deleteListing(listing.id)
                                                     setListingExists(false)
                                                 }
-                                                }>Remove your listing</button>
+                                                }>Remove your listing</a>
                                             </div>
                                         )}
                                     </div>

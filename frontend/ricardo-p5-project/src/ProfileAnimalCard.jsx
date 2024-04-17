@@ -27,7 +27,6 @@ function ProfileAnimalCard({ animals, onDelete }) {
         <div key={animal.id} className="profile-animal-card">
             <h3 style={{marginBottom: '0'}}>{animal.name}</h3>
             <p style={{marginTop: '0'}}>{animal.age} {animal.sex} {animal.primary_breed ? animal.primary_breed : animal.species} in {animal.contact_address_city}, {animal.contact_address_state}</p>
-            
             <img
             src={
                 animal.photo ? animal.photo :
@@ -55,7 +54,7 @@ function ProfileAnimalCard({ animals, onDelete }) {
                 animal.species.toLowerCase() === 'sugar glider' ? 'https://aaah0mnbncqtinas.public.blob.vercel-storage.com/2jHo3agFnx-no-background-6bCUiwZyWSWtgO6H2B8E0WZQ8ERume.png' :
                 animal.species.toLowerCase() === 'turtle' ? 'https://freepngimg.com/thumb/cute/29798-8-cute-turtle-image.png' :
                 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Heart-SG2001-transparent.png'
-            } style={{height: '200px', objectFit: 'contain'}} />
+            } style={{height: '200px', maxWidth: '225px', objectFit: 'contain'}} />
             <p>{animal.breed}</p>
             <a href={animal.url}>See more on {animal.name} here.</a>
             <h4 style={{color: animal.status == 'adoptable' ? 'green' : 'red'}}>{animal.status == 'adoptable' ? 'Available for Adoption!' : 'No longer available.'}</h4>

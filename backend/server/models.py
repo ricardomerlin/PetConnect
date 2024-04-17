@@ -71,7 +71,7 @@ class Profile(db.Model, SerializerMixin):
     birthday = db.Column(db.Date, nullable=True)
     profile_picture = db.Column(db.String(500), nullable=True)
     description = db.Column(db.String(400))
-    profile_picture_data = db.Column(db.LargeBinary, nullable=True)
+    # profile_picture_data = db.Column(db.LargeBinay, nullable=True)
 
     foster_listing = db.relationship('Foster_listing', back_populates='profile')
     saved_animals = db.relationship('Saved_Animal', back_populates='profile', cascade='all, delete-orphan')

@@ -162,9 +162,10 @@ body::before {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  border-radius: 20px;
+  border: 2px solid #d870fe;
   background-color: #f9f9f9;
 }
 
@@ -189,14 +190,25 @@ body::before {
   padding: 10px 20px;
   border-radius: 4px;
   border: none;
-  background-color: #007BFF;
+  background-color: #7b4392;
   color: white;
   cursor: pointer;
 }
 
+.login-submit:hover {
+  background-color: #d870fe;
+}
+
+.login-create:hover {
+  background-color: #844179;
+  color: white;
+}
+
 .login-create {
-  background-color: #6c757d;
+  background-color: #feefff;
   margin-top: 10px;
+  color: black;
+  border: 2px solid #d870fe;
 }
 
 .image-container {
@@ -215,7 +227,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
+  margin: 40px auto;
   width: 50vw;
   border: 1px solid #ccc;
   padding: 20px;
@@ -227,6 +239,7 @@ body::before {
 .create-profile-form {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 100%;
   margin-bottom: 20px;
 }
@@ -257,6 +270,18 @@ body::before {
   background-color: #cb48ff;
   color: white;
   cursor: pointer;
+}
+
+.create-profile-upload-image {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  height: 150px;
+  background-color: #cb48ff;
+  margin-bottom: 30px;
+  color: white;
+  cursor: pointer;
+
 }
 
 .create-profile-submit:hover {
@@ -543,11 +568,11 @@ span {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid #e4aeff;
+  border: 2px solid #be3bff;
   padding: 20px;
   margin-left: 40px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
+  box-shadow: 30px 30px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fbe6ff;
   border-radius: 10px;
   flex: 1;
   height: 500px;
@@ -627,9 +652,12 @@ span {
   border: 1px solid #ccc; 
   padding: 10px;
   border-radius: 30px;
-  background-color: white;
+  border: 2px solid black;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 
 .animal-profile-container {
   display: flex;

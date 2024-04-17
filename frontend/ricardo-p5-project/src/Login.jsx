@@ -17,16 +17,10 @@ function Login({ handleLogin }) {
         return <CreateProfile handleLogin={handleLogin}/>;
     }
 
-    // useEffect(() => {
-    //     fetch('/api/animals')
-    //     .then((res) => res.json())
-    //     .then((data) => console.log(data));
-    // }, [username]);
-
     return (
         <div className='login-container'>
             <DogPics />
-            <h1 style={{marginTop: '20px', marginBottom:"0px"}}>Welcome to PetConnect</h1>
+            <h1 style={{marginTop: '20px', marginBottom:"0px"}}>PetConnect</h1>
             <p>We're glad to see you here. Please login to continue or create a new account if you don't have one yet.</p>
             <form onSubmit={handleSubmit} className="login-form">
                 <label className="login-label">

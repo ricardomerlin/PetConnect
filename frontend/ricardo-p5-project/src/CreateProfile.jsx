@@ -10,6 +10,7 @@ function CreateProfile({ handleLogin }) {
     const [profilePicture, setProfilePicture] = useState(null);
     const [description, setDescription] = useState('');
     const [loggingIn, setLoggingIn] = useState(false)
+    const [imagePreview, setImagePreview] = useState(null);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -51,6 +52,11 @@ function CreateProfile({ handleLogin }) {
         }
     };
 
+    const handleImageUpload = (e) => {
+        setProfilePicture(e.target.files[0]);
+        setImagePreview(URL.createObjectURL(e.target.files[0]));
+    }
+
     if (loggingIn) {
         return <Login handleLogin={handleLogin}/>
     }
@@ -83,13 +89,14 @@ function CreateProfile({ handleLogin }) {
                     <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required />
                 </label>
                 <label>
-                    Profile Picture:
-                    <input type="file" accept="image/*" onChange={(e) => setProfilePicture(e.target.files[0])} required />
+                Profile Picture:
+                    <input type="file" accept="image/*" onChange={handleImageUpload} required style={{display: 'none'}} id="profilePictureUpload" />
+                    <br/><label htmlFor="profilePictureUpload" style={{cursor: 'pointer', textDecoration: 'underline'}}>Choose file</label>
                 </label>
-                {profilePicture ? 
+                {imagePreview ? 
                 <img
-                src={profilePicture}
-                className="create-profile-image"
+                src={imagePreview}
+                className="create-profile-upload-image"
                 />
                 :
                 null
