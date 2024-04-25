@@ -11,14 +11,13 @@ function DogPics() {
             setDogPics(data.message);
         });
     }, []);
-
     
     useEffect(() => {
         const interval = setInterval(() => {
             const randomInt1 = Math.floor(Math.random() * dogPics.length);
             setRandomInt1(randomInt1);
         }, 10000);
-    
+        
         return () => clearInterval(interval);
     }, [dogPics]);
 

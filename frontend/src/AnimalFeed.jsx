@@ -57,14 +57,13 @@ function AnimalFeed({ profile, animals }) {
     useEffect(() => {
         getSavedAnimals()
         const checkScroll = () => {
-          setIsTop(window.pageYOffset === 0);
+            setIsTop(window.pageYOffset === 0);
         };
-      
         window.addEventListener('scroll', checkScroll);
         return () => {
-          window.removeEventListener('scroll', checkScroll);
+            window.removeEventListener('scroll', checkScroll);
         };
-      }, []);
+    }, []);
 
     useEffect(() => {
         if (modalIsOpen === true) {
@@ -125,14 +124,13 @@ function AnimalFeed({ profile, animals }) {
     
         setFilterAnimals(filteredAnimals);
     }, [filterSubmit, species, breed, age, size, goodWithCats, goodWithDogs, goodWithChildren, houseTrained, declawed, spayedNeutered, city, state]);
-    
 
-    function handleAnimalClick(animal) {
+    const handleAnimalClick = (animal) => {
         setSelectedAnimal(animal);
         setModalIsOpen(!modalIsOpen);
-    }
+    };
 
-    function getSavedAnimals() {
+    const getSavedAnimals = () => {
         fetch(`/api/saved_animals`)
         .then(res => res.json())
         .then(data => {
@@ -191,14 +189,9 @@ function AnimalFeed({ profile, animals }) {
         setFilterSubmit(true)
     }
 
-    console.log(profile.animals)
-    console.log(filterAnimals)
-    console.log(species)
-
-    function handleBreedSelection(breed) {
-        console.log(breed)
+    const handleBreedSelection = (breed) => {
         setBreed(breed);
-    }
+    };
 
     const handleNextPage = () => {
         setLowerIndex(prevIndex => {
@@ -213,8 +206,6 @@ function AnimalFeed({ profile, animals }) {
             return Math.max(prevIndex - itemsPerPage, 0);
         });
     };
-
-    console.log(savedAnimals)
     
     const checkSavedAnimal = (animal) => {
         console.log('check saved animal is running');

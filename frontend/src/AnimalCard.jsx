@@ -1,18 +1,14 @@
-import { useEffect } from "react";
-
-function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAnimals }) {
+function AnimalCard({ animals, handleAnimalClick, lowerIndex, filterAnimals }) {
 
     const animalsToMap = filterAnimals 
     ? (Array.isArray(filterAnimals) 
         ? filterAnimals.slice(lowerIndex, lowerIndex + 99) 
         : []
-      ) 
+        ) 
     : (Array.isArray(animals) 
         ? animals.slice(lowerIndex, lowerIndex + 99) 
         : []
-      );
-
-
+        );
 
     const mappedAnimals = animalsToMap.map(animal => {
         return (
@@ -65,7 +61,6 @@ function AnimalCard({ animals, handleAnimalClick, profile, lowerIndex, filterAni
             </div>
         );
     });
-
 
     return (
         <div className='animal-card-container'>

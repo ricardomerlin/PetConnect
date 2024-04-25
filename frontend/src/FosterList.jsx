@@ -1,19 +1,15 @@
 import { useState, useEffect } from 'react'
 import StateList from './statelist'
 
-
 function FosterList({ profile }) {
-
     const [fosterListings, setFosterListings] = useState([])
     const [email, setEmail] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
     const [preference, setPreference] = useState('dog')
     const [description, setDescription] = useState('')
-
     const [filterCity, setFilterCity] = useState('')
     const [filterState, setFilterState] = useState('')
-
     const [listingExists, setListingExists] = useState(false)
 
     useEffect(() => {
@@ -40,8 +36,6 @@ function FosterList({ profile }) {
         const filteredListings = fosterListings.filter(listing => listing.city.toLowerCase().includes(filterCity.toLowerCase()) && listing.state.toLowerCase().includes(filterState.toLowerCase()))
         setFosterListings(filteredListings)
     }
-
-
 
     function handleFosterListings (e) {
         e.preventDefault()
@@ -84,8 +78,6 @@ function FosterList({ profile }) {
             setFosterListings(fosterListings.filter(listing => listing.profile_id !== profile.id))
         })
     }
-
-    console.log(description)
 
     return (
         <div className='foster-component-container'>
@@ -170,7 +162,6 @@ function FosterList({ profile }) {
                     </div>
             </div>
         </div>
-
     )
 }
 

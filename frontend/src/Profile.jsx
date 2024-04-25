@@ -5,8 +5,6 @@ import ProfileAnimalCard from './ProfileAnimalCard';
 function Profile({ profile }) {
     const [animals, setAnimals] = useState([]);
 
-    console.log(profile);
-
     useEffect(() => {
         fetch(`api/profile/animals?profileId=${profile.id}`)
         .then(res => res.json())
@@ -25,8 +23,6 @@ function Profile({ profile }) {
     }
 
     const reformattedDate = new Date(profile.birthday).toLocaleDateString();
-
-    console.log(reformattedDate)
 
     return (
         <div className='profile-card'>
